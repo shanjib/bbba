@@ -195,27 +195,36 @@ function deriveCareerStats() {
 
 // ─── Partials ─────────────────────────────────────────────────────────────────
 
+// Derive the base URL from the app.js script tag itself.
+// This is always correct regardless of repo name or subdirectory depth,
+// because partials/ sits right next to app.js inside js/.
+function getBasePath() {
+    // Walk all script tags and find the one ending in app.js
+    const scripts = Array.from(document.querySelectorAll("script[src]"));
+    const appScript = scripts.find(s => s.src.endsWith("app.js") || s.src.includes("app.js"));
+    if (appScript) {
+        // appScript.src is always a fully resolved absolute URL e.g.
+        // "https://user.github.io/repo/js/app.js"
+        // Strip the filename to get the directory.
+        return appScript.src.substring(0, appScript.src.lastIndexOf("/") + 1);
+    }
+    // Should never reach here, but log loudly if we do
+    console.error("BBBA: could not find app.js script tag — path resolution failed.");
+    return "./js/";
+}
+
 async function loadPartials() {
     const base = getBasePath();
 
     const [headerHTML, footerHTML] = await Promise.all([
-        fetch(`${base}js/partials/header.html`).then(r => r.text()),
-        fetch(`${base}js/partials/footer.html`).then(r => r.text()),
+        fetch(`${base}partials/header.html`).then(r => r.text()),
+        fetch(`${base}partials/footer.html`).then(r => r.text()),
     ]);
 
     const headerEl = document.getElementById("site-header-placeholder");
     const footerEl = document.getElementById("site-footer-placeholder");
     if (headerEl) headerEl.outerHTML = headerHTML;
     if (footerEl) footerEl.outerHTML = footerHTML;
-}
-
-// Resolve base path so fetches work regardless of subdirectory depth
-function getBasePath() {
-    // All HTML files and assets sit at the same directory level, so paths
-    // relative to the current page are always correct. Using "./" works on
-    // GitHub Pages (/repo-name/page.html) and local dev servers alike.
-    const path = window.location.pathname;
-    return path.substring(0, path.lastIndexOf("/") + 1);
 }
 
 // ─── Page: About ──────────────────────────────────────────────────────────────
@@ -607,7 +616,7 @@ async function loadSeasonScripts() {
     for (const season of config.seasons) {
         await new Promise((resolve) => {
             const script = document.createElement("script");
-            script.src = `${base}js/data/season-${season}.js`;
+            script.src = `${base}data/season-${season}.js`;
             script.onload = resolve;
             script.onerror = () => {
                 console.warn(`BBBA: could not load season-${season}.js — skipping.`);
