@@ -1,0 +1,26 @@
+// All-time player registry — no team or season affiliation.
+// To add a new player, append to this array.
+// Player IDs must be unique and never reused, even if a player leaves and rejoins.
+const players = [
+    {id: "p1", name: "Istiaque Shanjib"},
+    {id: "p2", name: "Wasif Shawman"},
+    {id: "p3", name: "Mashuk Rahman"},
+    {id: "p4", name: "Arefin Mohiuddin"},
+    {id: "p5", name: "Fardin Islam"},
+    {id: "p6", name: "Iram Islam"},
+    {id: "p7", name: "Afsa Nafe"},
+    {id: "p8", name: "Abrar Jalal"},
+    {id: "p9", name: "Shihab Chowdhury"},
+    {id: "p10", name: "Shadman Chowdhury"},
+    {id: "p11", name: "Rezwan Islam"},
+    {id: "p12", name: "Shakib Idris"},
+    {id: "p13", name: "Owasif Rahman"},
+    {id: "p14", name: "Owalid Rahman"},
+    {id: "p15", name: "Tayseer Chowdhury"},
+    {id: "p16", name: "Sazed Aftab"},
+    {id: "p17", name: "Farhan Ahmed"},
+    {id: "p18", name: "Eric Ninthala"},
+    {id: "p19", name: "Salwan Sabil"},
+    {id: "p20", name: "Jakwan Hossain"},
+    {id: "p21", name: "Zamie Abdullah"},
+];

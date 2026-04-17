@@ -8,31 +8,15 @@
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="logo-wrap">
-        <div class="logo-icon">BBBA</div>
-        <div class="logo-text">
-          <span class="logo-abbr">BBBA</span>
-          <span class="logo-sub">Boston Bengali Basketball</span>
-        </div>
-      </a>
-      <nav class="site-nav">
-        <a href="index.html"     class="nav-link">About</a>
-        <a href="schedule.html"  class="nav-link">Schedule</a>
-        <a href="standings.html" class="nav-link">Standings</a>
-        <a href="teams.html"     class="nav-link">Teams</a>
-        <a href="stats.html"     class="nav-link">Stats</a>
-        <a href="rules.html"     class="nav-link">Rules</a>
-      </nav>
-    </div>
-  </header>
+  <div id="site-header-placeholder"></div>
 
   <main class="page-wrap">
     <div class="page-hero">
       <h1 class="page-title">Stan<span>dings</span></h1>
-      <p class="page-subtitle">Season <span class="league-season"></span> &mdash; Tiebreaker: head-to-head record, then head-to-head point differential</p>
+      <p class="page-subtitle">Tiebreaker: head-to-head record, then head-to-head point differential</p>
     </div>
+
+    <div id="season-switcher" class="season-switcher-wrap"></div>
 
     <div class="standings-wrap">
       <table class="standings-table">
@@ -52,14 +36,12 @@
       </table>
     </div>
     <p class="standings-note">PF = Points For &nbsp;·&nbsp; PA = Points Against &nbsp;·&nbsp; DIFF = Point Differential</p>
-
   </main>
 
-  <footer class="site-footer">
-    <strong class="league-name"></strong> &nbsp;·&nbsp; Season <span class="league-season"></span>
-  </footer>
+  <div id="site-footer-placeholder"></div>
 
-  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/players.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
