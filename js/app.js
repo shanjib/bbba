@@ -17,6 +17,9 @@ function getSeasonData(seasonKey) {
 function setSeasonParam(seasonKey) {
     const url = new URL(window.location.href);
     url.searchParams.set("season", seasonKey);
+    // Remove ?game= when switching seasons — a box score from another season
+    // is no longer relevant and would show the wrong data
+    url.searchParams.delete("game");
     window.history.pushState({}, "", url);
 }
 
@@ -56,6 +59,13 @@ function currentPage() {
 function renderSeasonSwitcher(activeSeason) {
     const el = document.getElementById("season-switcher");
     if (!el) return;
+
+    // Hide switcher when viewing a specific box score
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("game")) {
+        el.style.display = "none";
+        return;
+    }
 
     if (config.seasons.length <= 1) {
         el.style.display = "none";
@@ -288,7 +298,7 @@ function renderSchedule() {
             </span>
             <span class="team-name ${!homeWin ? "winner" : ""}">${away?.name ?? g.away}</span>
           </div>
-          <a class="box-score-link" href="stats.html?game=${g.id}">Box Score →</a>
+          <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
         </div>`;
         });
     }
@@ -450,7 +460,7 @@ function renderBoxScore(gameId, container) {
         if (!statsArr.length) return `<p class="empty-state">No stats recorded.</p>`;
         return `
       <table class="roster-table">
-        <thead><tr><th>Player</th><th>PTS</th><th>REB</th><th>AST</th></tr></thead>
+        <thead><tr><th>Player</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
         <tbody>
           ${statsArr.map(ps => {
             const p = getPlayer(ps.playerId);
@@ -459,6 +469,8 @@ function renderBoxScore(gameId, container) {
               <td>${ps.points   ?? 0}</td>
               <td>${ps.rebounds ?? 0}</td>
               <td>${ps.assists  ?? 0}</td>
+              <td>${ps.blocks   ?? 0}</td>
+              <td>${ps.steals   ?? 0}</td>
             </tr>`;
         }).join("")}
         </tbody>
