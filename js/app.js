@@ -142,7 +142,7 @@ function deriveSeasonStats(seasonKey) {
 
     const map = {};
     players.forEach(p => {
-        map[p.id] = { playerId: p.id, name: p.name, gamesPlayed: 0, totalPoints: 0, totalRebounds: 0, totalAssists: 0 };
+        map[p.id] = { playerId: p.id, name: p.name, gamesPlayed: 0, totalPoints: 0, totalRebounds: 0, totalAssists: 0, totalBlocks: 0, totalSteals: 0 };
     });
 
     data.games.filter(isPlayed).forEach(g => {
@@ -152,6 +152,8 @@ function deriveSeasonStats(seasonKey) {
             map[ps.playerId].totalPoints   += ps.points   ?? 0;
             map[ps.playerId].totalRebounds += ps.rebounds ?? 0;
             map[ps.playerId].totalAssists  += ps.assists  ?? 0;
+            map[ps.playerId].totalBlocks   += ps.blocks   ?? 0;
+            map[ps.playerId].totalSteals   += ps.steals   ?? 0;
         });
     });
 
@@ -161,7 +163,7 @@ function deriveSeasonStats(seasonKey) {
 function deriveCareerStats() {
     const map = {};
     players.forEach(p => {
-        map[p.id] = { playerId: p.id, name: p.name, seasonsPlayed: [], gamesPlayed: 0, totalPoints: 0, totalRebounds: 0, totalAssists: 0 };
+        map[p.id] = { playerId: p.id, name: p.name, seasonsPlayed: [], gamesPlayed: 0, totalPoints: 0, totalRebounds: 0, totalAssists: 0, totalBlocks: 0, totalSteals: 0 };
     });
 
     config.seasons.forEach(seasonKey => {
@@ -180,6 +182,8 @@ function deriveCareerStats() {
                 map[ps.playerId].totalPoints   += ps.points   ?? 0;
                 map[ps.playerId].totalRebounds += ps.rebounds ?? 0;
                 map[ps.playerId].totalAssists  += ps.assists  ?? 0;
+                map[ps.playerId].totalBlocks   += ps.blocks   ?? 0;
+                map[ps.playerId].totalSteals   += ps.steals   ?? 0;
             });
         });
 
@@ -360,7 +364,7 @@ function renderTeams(seasonKey) {
         if (roster.length) {
             rosterHtml = `
         <table class="roster-table">
-          <thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>PTS</th><th>REB</th><th>AST</th></tr></thead>
+          <thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
           <tbody>
             ${roster.map(p => {
                 const s = allStats.find(x => x.playerId === p.id) || { gamesPlayed: 0, totalPoints: 0, totalRebounds: 0, totalAssists: 0 };
@@ -370,9 +374,13 @@ function renderTeams(seasonKey) {
                 <td>${avg(s.totalPoints,   s.gamesPlayed)}</td>
                 <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
                 <td>${avg(s.totalAssists,  s.gamesPlayed)}</td>
+                <td>${avg(s.totalBlocks,   s.gamesPlayed)}</td>
+                <td>${avg(s.totalSteals,   s.gamesPlayed)}</td>
                 <td>${s.totalPoints}</td>
                 <td>${s.totalRebounds}</td>
                 <td>${s.totalAssists}</td>
+                <td>${s.totalBlocks}</td>
+                <td>${s.totalSteals}</td>
               </tr>`;
             }).join("")}
           </tbody>
@@ -511,9 +519,14 @@ function renderStatsLeaders(seasonKey, container) {
 
         html += `<div class="stats-section-heading">Season Leaders</div>`;
         html += `<div class="leaders-grid">`;
+        const byBPG = [...allStats].sort((a, b) => (b.totalBlocks  / b.gamesPlayed) - (a.totalBlocks  / a.gamesPlayed));
+        const bySPG = [...allStats].sort((a, b) => (b.totalSteals  / b.gamesPlayed) - (a.totalSteals  / a.gamesPlayed));
+
         html += leaderTable("PPG", byPPG, "totalPoints");
         html += leaderTable("RPG", byRPG, "totalRebounds");
         html += leaderTable("APG", byAPG, "totalAssists");
+        html += leaderTable("BPG", byBPG, "totalBlocks");
+        html += leaderTable("SPG", bySPG, "totalSteals");
 
         // Full season table
         const allSorted = [...allStats].sort((a, b) => (b.totalPoints / b.gamesPlayed) - (a.totalPoints / a.gamesPlayed));
@@ -521,7 +534,7 @@ function renderStatsLeaders(seasonKey, container) {
       <div class="leaders-block full-width">
         <h3 class="leaders-title">All Players — ${seasonKey} Season</h3>
         <table class="roster-table">
-          <thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>PTS</th><th>REB</th><th>AST</th></tr></thead>
+          <thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
           <tbody>
             ${allSorted.map(s => `<tr>
               <td class="player-name">${s.name}</td>
@@ -549,7 +562,7 @@ function renderStatsLeaders(seasonKey, container) {
       <div class="leaders-block full-width">
         <h3 class="leaders-title">All-Time Career Stats</h3>
         <table class="roster-table">
-          <thead><tr><th>Player</th><th>Seasons</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>PTS</th><th>REB</th><th>AST</th></tr></thead>
+          <thead><tr><th>Player</th><th>Seasons</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
           <tbody>
             ${careerSorted.map(s => `<tr>
               <td class="player-name">${s.name}</td>
@@ -558,9 +571,13 @@ function renderStatsLeaders(seasonKey, container) {
               <td>${avg(s.totalPoints,   s.gamesPlayed)}</td>
               <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
               <td>${avg(s.totalAssists,  s.gamesPlayed)}</td>
+              <td>${avg(s.totalBlocks,   s.gamesPlayed)}</td>
+              <td>${avg(s.totalSteals,   s.gamesPlayed)}</td>
               <td>${s.totalPoints}</td>
               <td>${s.totalRebounds}</td>
               <td>${s.totalAssists}</td>
+              <td>${s.totalBlocks}</td>
+              <td>${s.totalSteals}</td>
             </tr>`).join("")}
           </tbody>
         </table>

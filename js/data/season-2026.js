@@ -4,7 +4,7 @@
 // - To record a completed game, fill in: date, homeScore, awayScore, and playerStats.
 //
 // playerStats example:
-//   { playerId: "p1", points: 14, rebounds: 5, assists: 3 }
+//   { playerId: "p1", points: 14, rebounds: 5, assists: 3, blocks: 1, steals: 2 }
 //
 // Scoring is 1s and 2s:
 //   1 point = inside the arc, 2 points = beyond the arc
@@ -43,13 +43,28 @@ var seasons = {
         homeScore: null, awayScore: null,
         playerStats: []
       },
-      {
-        id: "2026-g4",
-        date: null,
-        home: "team-b", away: "team-d",
-        homeScore: null, awayScore: null,
-        playerStats: []
-      },
+        {
+            id: "2026-g4",
+            date: "2026-05-17",
+            home: "team-b", away: "team-d",
+            homeScore: 14, awayScore: 11,
+            playerStats: [
+                {playerId: "p1", points: 2, rebounds: 12, assists: 1, blocks: 0, steals: 0},
+                {playerId: "p8", points: 5, rebounds: 8, assists: 3, blocks: 0, steals: 4},
+                {playerId: "p13", points: 3, rebounds: 0, assists: 0, blocks: 0, steals: 0},
+                {playerId: "p16", points: 1, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+                {playerId: "p17", points: 0, rebounds: 9, assists: 2, blocks: 0, steals: 2},
+                {playerId: "p26", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1},
+                {playerId: "p27", points: 3, rebounds: 7, assists: 0, blocks: 0, steals: 3},
+                {playerId: "p6", points: 2, rebounds: 5, assists: 0, blocks: 3, steals: 3},
+                {playerId: "p9", points: 0, rebounds: 3, assists: 0, blocks: 0, steals: 2},
+                {playerId: "p15", points: 0, rebounds: 6, assists: 1, blocks: 1, steals: 1},
+                {playerId: "p5", points: 0, rebounds: 7, assists: 0, blocks: 0, steals: 0},
+                {playerId: "p22", points: 4, rebounds: 9, assists: 1, blocks: 0, steals: 1},
+                {playerId: "p25", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 0},
+                {playerId: "p30", points: 5, rebounds: 8, assists: 1, blocks: 0, steals: 0},
+            ]
+        },
       {
         id: "2026-g5",
         date: null,
