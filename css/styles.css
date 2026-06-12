@@ -628,6 +628,16 @@ img { display: block; max-width: 100%; }
 
 .yt-link:hover { background: #cc0000; }
 
+.totals-row {
+    border-top: 2px solid var(--border);
+    background: var(--green-light);
+}
+
+.totals-row td {
+    font-weight: 800;
+    color: var(--green-dark);
+}
+
 .box-team-label {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 22px;

@@ -300,7 +300,7 @@ function renderSchedule() {
           </div>
           <div class="game-card-links">
             ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
-            <a class="box-score-link" href="stats.html?game=${g.id}">Box Score →</a>
+            <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
           </div>
         </div>`;
         });
@@ -461,6 +461,16 @@ function renderBoxScore(gameId, container) {
 
     function buildTable(statsArr) {
         if (!statsArr.length) return `<p class="empty-state">No stats recorded.</p>`;
+
+        const totals = statsArr.reduce((acc, ps) => {
+            acc.points   += ps.points   ?? 0;
+            acc.rebounds += ps.rebounds ?? 0;
+            acc.assists  += ps.assists  ?? 0;
+            acc.blocks   += ps.blocks   ?? 0;
+            acc.steals   += ps.steals   ?? 0;
+            return acc;
+        }, { points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0 });
+
         return `
       <table class="roster-table">
         <thead><tr><th>Player</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
@@ -477,6 +487,16 @@ function renderBoxScore(gameId, container) {
             </tr>`;
         }).join("")}
         </tbody>
+        <tfoot>
+          <tr class="totals-row">
+            <td class="player-name">Team Totals</td>
+            <td>${totals.points}</td>
+            <td>${totals.rebounds}</td>
+            <td>${totals.assists}</td>
+            <td>${totals.blocks}</td>
+            <td>${totals.steals}</td>
+          </tr>
+        </tfoot>
       </table>`;
     }
 
@@ -561,9 +581,13 @@ function renderStatsLeaders(seasonKey, container) {
               <td>${avg(s.totalPoints,   s.gamesPlayed)}</td>
               <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
               <td>${avg(s.totalAssists,  s.gamesPlayed)}</td>
+              <td>${avg(s.totalBlocks,   s.gamesPlayed)}</td>
+              <td>${avg(s.totalSteals,   s.gamesPlayed)}</td>
               <td>${s.totalPoints}</td>
               <td>${s.totalRebounds}</td>
               <td>${s.totalAssists}</td>
+              <td>${s.totalBlocks}</td>
+              <td>${s.totalSteals}</td>
             </tr>`).join("")}
           </tbody>
         </table>
