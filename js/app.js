@@ -298,7 +298,10 @@ function renderSchedule() {
             </span>
             <span class="team-name ${!homeWin ? "winner" : ""}">${away?.name ?? g.away}</span>
           </div>
-          <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
+          <div class="game-card-links">
+            ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
+            <a class="box-score-link" href="stats.html?game=${g.id}">Box Score →</a>
+          </div>
         </div>`;
         });
     }
@@ -484,7 +487,11 @@ function renderBoxScore(gameId, container) {
         <div class="bs-team-name">${home?.name ?? game.home}</div>
         <div class="bs-score">${game.homeScore}</div>
       </div>
-      <div class="bs-date">${formatDate(game.date)}<br><span style="font-size:11px;opacity:.7">${seasonKey} Season</span></div>
+      <div class="bs-date">
+        ${formatDate(game.date)}<br>
+        <span style="font-size:11px;opacity:.7">${seasonKey} Season</span>
+        ${game.youtubeUrl ? `<br><a href="${game.youtubeUrl}" target="_blank" rel="noopener noreferrer" class="yt-link">▶ Watch Game</a>` : ""}
+      </div>
       <div class="bs-team ${!homeWin ? "bs-winner" : ""}">
         <div class="bs-team-name">${away?.name ?? game.away}</div>
         <div class="bs-score">${game.awayScore}</div>
