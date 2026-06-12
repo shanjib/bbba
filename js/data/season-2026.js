@@ -48,6 +48,7 @@ var seasons = {
             date: "2026-05-17",
             home: "team-b", away: "team-d",
             homeScore: 14, awayScore: 11,
+            youtubeUrl: "https://youtu.be/4Y6FkNyRh5I",
             playerStats: [
                 {playerId: "p1", points: 2, rebounds: 12, assists: 1, blocks: 0, steals: 0},
                 {playerId: "p8", points: 5, rebounds: 8, assists: 3, blocks: 0, steals: 4},
@@ -82,10 +83,23 @@ var seasons = {
       // --- Matchup cycle 2 ---
       {
         id: "2026-g7",
-        date: null,
+        date: "2026-06-09",
         home: "team-b", away: "team-a",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        homeScore: 17, awayScore: 20,
+        youtubeUrl: "https://youtu.be/QoZQ9gTL_4Q",
+        playerStats: [
+          {playerId: "p1", points: 5, rebounds: 14, assists: 4, blocks: 0, steals: 3},
+          {playerId: "p8", points: 10, rebounds: 5, assists: 4, blocks: 0, steals: 3},
+          {playerId: "p13", points: 1, rebounds: 4, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p27", points: 1, rebounds: 2, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p4", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p17", points: 0, rebounds: 7, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p2", points: 8, rebounds: 10, assists: 3, blocks: 0, steals: 2},
+          {playerId: "p12", points: 6, rebounds: 7, assists: 2, blocks: 0, steals: 1},
+          {playerId: "p7", points: 2, rebounds: 7, assists: 1, blocks: 0, steals: 2},
+          {playerId: "p21", points: 1, rebounds: 12, assists: 5, blocks: 0, steals: 0},
+          {playerId: "p19", points: 3, rebounds: 4, assists: 0, blocks: 0, steals: 1},
+        ]
       },
       {
         id: "2026-g8",
