@@ -98,7 +98,7 @@ var seasons = {
           {playerId: "p12", points: 6, rebounds: 7, assists: 2, blocks: 0, steals: 1},
           {playerId: "p7", points: 2, rebounds: 7, assists: 1, blocks: 0, steals: 2},
           {playerId: "p21", points: 1, rebounds: 12, assists: 5, blocks: 0, steals: 0},
-          {playerId: "p19", points: 3, rebounds: 4, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p19", points: 3, rebounds: 4, assists: 0, blocks: 1, steals: 0},
         ]
       },
       {
