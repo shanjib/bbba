@@ -362,16 +362,35 @@ img { display: block; max-width: 100%; }
     letter-spacing: 1px;
 }
 
+.game-card-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
 .box-score-link {
     font-size: 13px;
     font-weight: 700;
     color: var(--red);
     white-space: nowrap;
     transition: color 0.15s;
-    margin-left: auto;
 }
 
 .box-score-link:hover { color: var(--red-dark); }
+
+.yt-link-inline {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: #ff0000;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.yt-link-inline:hover { background: #cc0000; }
 
 /* ─── Standings ──────────────────────────────────────────────────────────────── */
 .standings-wrap {
@@ -593,6 +612,21 @@ img { display: block; max-width: 100%; }
     color: var(--muted);
     text-align: center;
 }
+
+.yt-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: #ff0000;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+    transition: background 0.15s;
+}
+
+.yt-link:hover { background: #cc0000; }
 
 .box-team-label {
     font-family: 'Bebas Neue', sans-serif;
