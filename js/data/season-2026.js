@@ -38,10 +38,24 @@ var seasons = {
       },
       {
         id: "2026-g3",
-        date: null,
+        date: "2026-06-13",
         home: "team-a", away: "team-c",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        homeScore: 17, awayScore: 15,
+        youtubeUrl: null,
+        playerStats: [
+          {playerId: "p2", points: 13, rebounds: 10, assists: 0, blocks: 1, steals: 1},
+          {playerId: "p12", points: 1, rebounds: 10, assists: 2, blocks: 0, steals: 1},
+          {playerId: "p7", points: 1, rebounds: 6, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p21", points: 1, rebounds: 12, assists: 5, blocks: 0, steals: 0},
+          {playerId: "p19", points: 0, rebounds: 18, assists: 3, blocks: 1, steals: 0},
+          {playerId: "p24", points: 1, rebounds: 2, assists: 0, blocks: 1, steals: 2},
+          {playerId: "p29", points: 7, rebounds: 13, assists: 1, blocks: 1, steals: 3},
+          {playerId: "p3", points: 3, rebounds: 13, assists: 2, blocks: 0, steals: 0},
+          {playerId: "p28", points: 2, rebounds: 9, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p10", points: 1, rebounds: 3, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p23", points: 0, rebounds: 9, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p20", points: 2, rebounds: 2, assists: 0, blocks: 0, steals: 0},
+        ]
       },
         {
             id: "2026-g4",
