@@ -324,7 +324,7 @@ function renderSchedule() {
           </div>
           <div class="game-card-links">
             ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
-            <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
+            <a class="box-score-link" href="stats.html?game=${g.id}">Box Score →</a>
           </div>
         </div>`;
     });
@@ -400,7 +400,7 @@ function renderTeams(seasonKey) {
   container.innerHTML = data.teams.map(team => {
     const roster = team.playerIds.map(id => getPlayer(id)).filter(Boolean);
 
-    let rosterHtml = "";
+    let rosterHtml;
     if (roster.length) {
       rosterHtml = `
         <table class="roster-table">
@@ -562,16 +562,16 @@ function renderBoxScore(gameId, container) {
 
 function renderStatsLeaders(seasonKey, container) {
   const allStats = deriveSeasonStats(seasonKey).filter(s => s.gamesPlayed > 0);
-  const careerStats = deriveCareerStats();
   const data = getSeasonData(seasonKey);
 
   let html = "";
 
-  // ── Season leaders ──
   if (allStats.length) {
     const byPPG = [...allStats].sort((a, b) => (b.totalPoints / b.gamesPlayed) - (a.totalPoints / a.gamesPlayed));
     const byRPG = [...allStats].sort((a, b) => (b.totalRebounds / b.gamesPlayed) - (a.totalRebounds / a.gamesPlayed));
     const byAPG = [...allStats].sort((a, b) => (b.totalAssists / b.gamesPlayed) - (a.totalAssists / a.gamesPlayed));
+    const byBPG = [...allStats].sort((a, b) => (b.totalBlocks / b.gamesPlayed) - (a.totalBlocks / a.gamesPlayed));
+    const bySPG = [...allStats].sort((a, b) => (b.totalSteals / b.gamesPlayed) - (a.totalSteals / a.gamesPlayed));
 
     function leaderTable(label, sorted, totalKey) {
       return `
@@ -592,20 +592,48 @@ function renderStatsLeaders(seasonKey, container) {
         </div>`;
     }
 
+    // ── Season leaders ──
     html += `<div class="stats-section-heading">Season Leaders</div>`;
     html += `<div class="leaders-grid">`;
-    const byBPG = [...allStats].sort((a, b) => (b.totalBlocks / b.gamesPlayed) - (a.totalBlocks / a.gamesPlayed));
-    const bySPG = [...allStats].sort((a, b) => (b.totalSteals / b.gamesPlayed) - (a.totalSteals / a.gamesPlayed));
-
     html += leaderTable("PPG", byPPG, "totalPoints");
     html += leaderTable("RPG", byRPG, "totalRebounds");
     html += leaderTable("APG", byAPG, "totalAssists");
     html += leaderTable("BPG", byBPG, "totalBlocks");
     html += leaderTable("SPG", bySPG, "totalSteals");
+    html += `</div>`;
 
-    // Full season table
+    // ── Box scores ──
+    if (data) {
+      const playedGames = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
+      if (playedGames.length) {
+        html += `<div class="stats-section-heading" style="margin-top:48px;">Box Scores</div>`;
+        html += `<div class="leaders-grid"><div class="leaders-block full-width">
+          <h3 class="leaders-title">${seasonKey} Season</h3>
+          <div class="box-score-list">
+            ${playedGames.map(g => {
+          const home = getTeam(g.home, seasonKey);
+          const away = getTeam(g.away, seasonKey);
+          const homeWin = g.homeScore > g.awayScore;
+          return `
+                <a href="stats.html?game=${g.id}" class="box-score-item">
+                  <span class="bsi-date">${formatDate(g.date)}</span>
+                  <span class="bsi-matchup">
+                    <span class="${homeWin ? "bsi-winner" : ""}">${home?.name ?? g.home} ${g.homeScore}</span>
+                    <span class="bsi-sep">–</span>
+                    <span class="${!homeWin ? "bsi-winner" : ""}">${g.awayScore} ${away?.name ?? g.away}</span>
+                  </span>
+                  <span class="bsi-arrow">→</span>
+                </a>`;
+        }).join("")}
+          </div>
+        </div></div>`;
+      }
+    }
+
+    // ── Full season stats table ──
     const allSorted = [...allStats].sort((a, b) => (b.totalPoints / b.gamesPlayed) - (a.totalPoints / a.gamesPlayed));
-    html += `
+    html += `<div class="stats-section-heading" style="margin-top:48px;">Season Stats</div>`;
+    html += `<div class="leaders-grid">
       <div class="leaders-block full-width">
         <h3 class="leaders-title">All Players — ${seasonKey} Season</h3>
         <table class="roster-table">
@@ -627,69 +655,11 @@ function renderStatsLeaders(seasonKey, container) {
             </tr>`).join("")}
           </tbody>
         </table>
-      </div>`;
-    html += `</div>`; // end leaders-grid
-  } else {
-    html += `<p class="empty-state">No stats yet — check back after the first game!</p>`;
-  }
-
-  // ── Career stats ── (always shown, across all seasons)
-  if (careerStats.length) {
-    const careerSorted = [...careerStats].sort((a, b) => (b.totalPoints / b.gamesPlayed) - (a.totalPoints / a.gamesPlayed));
-    html += `<div class="stats-section-heading" style="margin-top:48px;">Career Stats</div>`;
-    html += `<div class="leaders-grid">
-      <div class="leaders-block full-width">
-        <h3 class="leaders-title">All-Time Career Stats</h3>
-        <table class="roster-table">
-          <thead><tr><th>Player</th><th>Seasons</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
-          <tbody>
-            ${careerSorted.map(s => `<tr>
-              <td class="player-name">${s.name}</td>
-              <td>${s.seasonsPlayed.join(", ")}</td>
-              <td>${s.gamesPlayed}</td>
-              <td>${avg(s.totalPoints, s.gamesPlayed)}</td>
-              <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
-              <td>${avg(s.totalAssists, s.gamesPlayed)}</td>
-              <td>${avg(s.totalBlocks, s.gamesPlayed)}</td>
-              <td>${avg(s.totalSteals, s.gamesPlayed)}</td>
-              <td>${s.totalPoints}</td>
-              <td>${s.totalRebounds}</td>
-              <td>${s.totalAssists}</td>
-              <td>${s.totalBlocks}</td>
-              <td>${s.totalSteals}</td>
-            </tr>`).join("")}
-          </tbody>
-        </table>
       </div>
     </div>`;
-  }
 
-  // ── Box score links ──
-  if (data) {
-    const playedGames = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
-    if (playedGames.length) {
-      html += `<div class="stats-section-heading" style="margin-top:48px;">Box Scores</div>`;
-      html += `<div class="leaders-grid"><div class="leaders-block full-width">
-        <h3 class="leaders-title">${seasonKey} Season</h3>
-        <div class="box-score-list">
-          ${playedGames.map(g => {
-        const home = getTeam(g.home, seasonKey);
-        const away = getTeam(g.away, seasonKey);
-        const homeWin = g.homeScore > g.awayScore;
-        return `
-              <a href="stats.html?game=${g.id}" class="box-score-item">
-                <span class="bsi-date">${formatDate(g.date)}</span>
-                <span class="bsi-matchup">
-                  <span class="${homeWin ? "bsi-winner" : ""}">${home?.name ?? g.home} ${g.homeScore}</span>
-                  <span class="bsi-sep">–</span>
-                  <span class="${!homeWin ? "bsi-winner" : ""}">${g.awayScore} ${away?.name ?? g.away}</span>
-                </span>
-                <span class="bsi-arrow">→</span>
-              </a>`;
-      }).join("")}
-        </div>
-      </div></div>`;
-    }
+  } else {
+    html += `<p class="empty-state">No stats yet — check back after the first game!</p>`;
   }
 
   container.innerHTML = html;
