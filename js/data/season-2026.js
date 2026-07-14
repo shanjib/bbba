@@ -1,4 +1,4 @@
-// Season 2026 — teams and games.
+ // Season 2026 — teams and games.
 // - To finalize rosters, add player IDs to each team's playerIds array.
 // - To add a new player to a team, add them to players.js first, then add their ID here.
 // - To record a completed game, fill in: date, homeScore, awayScore, and playerStats.
@@ -89,10 +89,27 @@ var seasons = {
       },
       {
         id: "2026-g6",
-        date: null,
+        date: "2026-07-12",
         home: "team-b", away: "team-c",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        homeScore: 22, awayScore: 34,
+        youtubeUrl: "https://youtu.be/eM0Sa4NaJ04",
+        playerStats: [
+          {playerId: "p1", points: 7, rebounds: 11, assists: 3, blocks: 0, steals: 1},
+          {playerId: "p8", points: 8, rebounds: 7, assists: 5, blocks: 0, steals: 2},
+          {playerId: "p13", points: 4, rebounds: 2, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p27", points: 2, rebounds: 4, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p4", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p26", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p4", points: 0, rebounds: 7, assists: 1, blocks: 0, steals: 0},
+
+          {playerId: "p3", points: 3, rebounds: 10, assists: 2, blocks: 1, steals: 1},
+          {playerId: "p29", points: 8, rebounds: 8, assists: 3, blocks: 3, steals: 3},
+          {playerId: "p11", points: 6, rebounds: 8, assists: 0, blocks: 0, steals: 2},
+          {playerId: "p10", points: 2, rebounds: 7, assists: 3, blocks: 0, steals: 1},
+          {playerId: "p20", points: 5, rebounds: 5, assists: 4, blocks: 0, steals: 1},
+          {playerId: "p28", points: 5, rebounds: 6, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p14", points: 6, rebounds: 4, assists: 2, blocks: 0, steals: 0},
+        ]
       },
       // --- Matchup cycle 2 ---
       {
