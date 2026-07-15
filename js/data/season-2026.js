@@ -82,7 +82,7 @@ var seasons = {
       },
       {
         id: "2026-g5",
-        date: null,
+        date: "2026-07-25",
         home: "team-a", away: "team-d",
         homeScore: null, awayScore: null,
         playerStats: []
@@ -141,7 +141,7 @@ var seasons = {
       },
       {
         id: "2026-g9",
-        date: null,
+        date: "2026-07-15",
         home: "team-c", away: "team-a",
         homeScore: null, awayScore: null,
         playerStats: []
