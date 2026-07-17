@@ -102,7 +102,7 @@ var seasons = {
           {playerId: "p26", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 1},
           {playerId: "p16", points: 0, rebounds: 7, assists: 1, blocks: 0, steals: 0},
 
-          {playerId: "p3", points: 3, rebounds: 10, assists: 2, blocks: 1, steals: 1},
+          {playerId: "p3", points: 3, rebounds: 10, assists: 2, blocks: 2, steals: 1},
           {playerId: "p29", points: 8, rebounds: 8, assists: 3, blocks: 3, steals: 3},
           {playerId: "p11", points: 6, rebounds: 8, assists: 0, blocks: 0, steals: 2},
           {playerId: "p10", points: 2, rebounds: 7, assists: 3, blocks: 0, steals: 1},
@@ -148,12 +148,12 @@ var seasons = {
         playerStats: [
           {playerId: "p2", points: 9, rebounds: 6, assists: 1, blocks: 5, steals: 1},
           {playerId: "p12", points: 3, rebounds: 4, assists: 5, blocks: 0, steals: 1},
-          {playerId: "p7", points: 1, rebounds: 2, assists: 0, blocks: 0, steals: 2},
+          {playerId: "p7", points: 1, rebounds: 2, assists: 0, blocks: 1, steals: 2},
           {playerId: "p21", points: 4, rebounds: 8, assists: 2, blocks: 1, steals: 3},
           {playerId: "p19", points: 1, rebounds: 2, assists: 1, blocks: 0, steals: 1},
           {playerId: "p24", points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0},
                    
-          {playerId: "p3", points: 2, rebounds: 8, assists: 3, blocks: 0, steals: 2},
+          {playerId: "p3", points: 2, rebounds: 8, assists: 3, blocks: 0, steals: 3},
           {playerId: "p29", points: 5, rebounds: 2, assists: 2, blocks: 0, steals: 2},
           {playerId: "p11", points: 6, rebounds: 9, assists: 0, blocks: 1, steals: 1},
           {playerId: "p20", points: 5, rebounds: 2, assists: 2, blocks: 0, steals: 0},
