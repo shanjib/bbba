@@ -144,6 +144,7 @@ var seasons = {
         date: "2026-07-15",
         home: "team-c", away: "team-a",
         homeScore: 21, awayScore: 18,
+        youtubeUrl: "https://youtu.be/E7BB5useJak",
         playerStats: [
           {playerId: "p2", points: 9, rebounds: 6, assists: 1, blocks: 5, steals: 1},
           {playerId: "p12", points: 3, rebounds: 4, assists: 5, blocks: 0, steals: 1},
