@@ -24,16 +24,16 @@ var seasons = {
       // --- Matchup cycle 1 ---
       {
         id: "2026-g1",
-        date: null,
+        date: "2026-07-22",
         home: "team-a", away: "team-b",
-        homeScore: null, awayScore: null,
+        homeScore: 25, awayScore: 20,
         playerStats: []
       },
       {
         id: "2026-g2",
-        date: null,
+        date: "2026-07-22",
         home: "team-c", away: "team-d",
-        homeScore: null, awayScore: null,
+        homeScore: 20, awayScore: 36,
         playerStats: []
       },
       {
@@ -134,7 +134,7 @@ var seasons = {
       },
       {
         id: "2026-g8",
-        date: null,
+        date: "2026-08-08",
         home: "team-d", away: "team-c",
         homeScore: null, awayScore: null,
         playerStats: []
@@ -171,7 +171,7 @@ var seasons = {
       },
       {
         id: "2026-g11",
-        date: null,
+        date: "2026-08-15",
         home: "team-d", away: "team-a",
         homeScore: null, awayScore: null,
         playerStats: []
