@@ -26,6 +26,7 @@ var seasons = {
         id: "2026-g1",
         date: "2026-07-22",
         home: "team-a", away: "team-b",
+        youtubeUrl: "https://youtu.be/C8A8eR95I3M",
         homeScore: 25, awayScore: 20,
         playerStats: []
       },
@@ -33,6 +34,7 @@ var seasons = {
         id: "2026-g2",
         date: "2026-07-22",
         home: "team-c", away: "team-d",
+        youtubeUrl: "https://youtu.be/QPC06scQ2j4",
         homeScore: 20, awayScore: 36,
         playerStats: []
       },
