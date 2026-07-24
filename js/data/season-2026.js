@@ -180,7 +180,7 @@ var seasons = {
       },
       {
         id: "2026-g10",
-        date: null,
+        date: "2026-08-11",
         home: "team-d", away: "team-b",
         homeScore: null, awayScore: null,
         playerStats: []
