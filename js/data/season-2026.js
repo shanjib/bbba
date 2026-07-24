@@ -18,7 +18,7 @@ var seasons = {
       {id: "team-a", name: "The Cuties", playerIds: ["p2", "p12", "p7", "p21", "p19", "p24"]},
       {id: "team-b", name: "Team Igoudala", playerIds: ["p8", "p1", "p13", "p16", "p17", "p4", "p26", "p27"]},
       {id: "team-c", name: "SunRun, Inc.", playerIds: ["p3", "p14", "p20", "p11", "p10", "p23", "p28", "p29"]},
-      {id: "team-d", name: "Team Dchampions", playerIds: ["p6", "p18", "p9", "p15", "p5", "p22", "p25", "p30"]},
+      {id: "team-d", name: "Team Dchampions", playerIds: ["p6", "p18", "p9", "p15", "p5", "p22", "p25", "p30", "p31"]},
     ],
     games: [
       // --- Matchup cycle 1 ---
@@ -26,15 +26,29 @@ var seasons = {
         id: "2026-g1",
         date: "2026-07-22",
         home: "team-a", away: "team-b",
-        youtubeUrl: "https://youtu.be/C8A8eR95I3M",
+        youtubeUrl: "https://youtu.be/5NFWNMyrdN4",
         homeScore: 25, awayScore: 20,
-        playerStats: []
+        playerStats: [
+          {playerId: "p1", points: 9, rebounds: 11, assists: 4, blocks: 1, steals: 0},
+          {playerId: "p8", points: 7, rebounds: 8, assists: 7, blocks: 1, steals: 5},
+          {playerId: "p13", points: 0, rebounds: 2, assists: 1, blocks: 0, steals: 2},
+          {playerId: "p27", points: 3, rebounds: 3, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p4", points: 1, rebounds: 1, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p26", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 0},
+          
+          {playerId: "p2", points: 18, rebounds: 5, assists: 1, blocks: 1, steals: 1},
+          {playerId: "p12", points: 5, rebounds: 7, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p7", points: 1, rebounds: 2, assists: 1, blocks: 0, steals: 2},
+          {playerId: "p21", points: 1, rebounds: 15, assists: 1, blocks: 0, steals: 2},
+          {playerId: "p19", points: 0, rebounds: 0, assists: 2, blocks: 0, steals: 0},
+          {playerId: "p24", points: 0, rebounds: 5, assists: 0, blocks: 0, steals: 4},
+        ]
       },
       {
         id: "2026-g2",
         date: "2026-07-22",
         home: "team-c", away: "team-d",
-        youtubeUrl: "https://youtu.be/QPC06scQ2j4",
+        youtubeUrl: "https://youtu.be/SbTi7UMgfb4",
         homeScore: 20, awayScore: 36,
         playerStats: []
       },
