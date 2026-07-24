@@ -48,7 +48,7 @@ var seasons = {
         id: "2026-g2",
         date: "2026-07-22",
         home: "team-c", away: "team-d",
-        youtubeUrl: "https://youtu.be/SbTi7UMgfb4",
+        youtubeUrl: "https://youtu.be/Ou9aBING-xg",
         homeScore: 20, awayScore: 36,
         playerStats: [
           {playerId: "p29", points: 7, rebounds: 6, assists: 1, blocks: 0, steals: 1},
