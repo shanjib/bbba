@@ -15,17 +15,17 @@ var seasons = {
   ...(typeof seasons !== "undefined" ? seasons : {}),
   "2026": {
     teams: [
-      {id: "team-a", name: "The Cuties", playerIds: ["p2", "p12", "p7", "p21", "p19", "p24"]},
-      {id: "team-b", name: "Team Igoudala", playerIds: ["p8", "p1", "p13", "p16", "p17", "p4", "p26", "p27"]},
-      {id: "team-c", name: "SunRun, Inc.", playerIds: ["p3", "p14", "p20", "p11", "p10", "p23", "p28", "p29"]},
-      {id: "team-d", name: "Team Dchampions", playerIds: ["p6", "p18", "p9", "p15", "p5", "p22", "p25", "p30", "p31"]},
+      {id: "cuties", name: "The Cuties", playerIds: ["p2", "p12", "p7", "p21", "p19", "p24"]},
+      {id: "iggy", name: "Team Igoudala", playerIds: ["p8", "p1", "p13", "p16", "p17", "p4", "p26", "p27"]},
+      {id: "sunrun", name: "SunRun, Inc.", playerIds: ["p3", "p14", "p20", "p11", "p10", "p23", "p28", "p29"]},
+      {id: "d", name: "Team Dchampions", playerIds: ["p6", "p18", "p9", "p15", "p5", "p22", "p25", "p30", "p31"]},
     ],
     games: [
       // --- Matchup cycle 1 ---
       {
         id: "2026-g1",
         date: "2026-07-22",
-        home: "team-a", away: "team-b",
+        home: "cuties", away: "iggy",
         youtubeUrl: "https://youtu.be/5NFWNMyrdN4",
         homeScore: 25, awayScore: 20,
         playerStats: [
@@ -47,7 +47,7 @@ var seasons = {
       {
         id: "2026-g2",
         date: "2026-07-22",
-        home: "team-c", away: "team-d",
+        home: "sunrun", away: "d",
         youtubeUrl: "https://youtu.be/Ou9aBING-xg",
         homeScore: 20, awayScore: 36,
         playerStats: [
@@ -71,7 +71,7 @@ var seasons = {
       {
         id: "2026-g3",
         date: "2026-06-13",
-        home: "team-a", away: "team-c",
+        home: "cuties", away: "sunrun",
         homeScore: 17, awayScore: 15,
         youtubeUrl: "https://youtu.be/YMYgcMMAA_c",
         playerStats: [
@@ -93,7 +93,7 @@ var seasons = {
       {
         id: "2026-g4",
         date: "2026-05-17",
-        home: "team-b", away: "team-d",
+        home: "iggy", away: "d",
         homeScore: 14, awayScore: 11,
         youtubeUrl: "https://youtu.be/4Y6FkNyRh5I",
         playerStats: [
@@ -117,14 +117,29 @@ var seasons = {
       {
         id: "2026-g5",
         date: "2026-07-25",
-        home: "team-a", away: "team-d",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        home: "cuties", away: "d",
+        homeScore: 15, awayScore: 10,
+        youtubeUrl: "https://youtu.be/CgI7zz1_1pM",
+        playerStats: [
+          {playerId: "p2", points: 8, rebounds: 16, assists: 2, blocks: 1, steals: 4},
+          {playerId: "p12", points: 3, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p7", points: 0, rebounds: 7, assists: 2, blocks: 0, steals: 3},
+          {playerId: "p21", points: 2, rebounds: 8, assists: 2, blocks: 0, steals: 1},
+          {playerId: "p19", points: 2, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+
+          {playerId: "p6", points: 1, rebounds: 17, assists: 2, blocks: 1, steals: 1},
+          {playerId: "p9", points: 4, rebounds: 0, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p15", points: 1, rebounds: 1, assists: 1, blocks: 0, steals: 0},
+          {playerId: "p5", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p22", points: 1, rebounds: 5, assists: 4, blocks: 0, steals: 0},
+          {playerId: "p30", points: 3, rebounds: 3, assists: 0, blocks: 0, steals: 1},
+          {playerId: "p31", points: 0, rebounds: 4, assists: 0, blocks: 0, steals: 0},
+        ]
       },
       {
         id: "2026-g6",
         date: "2026-07-12",
-        home: "team-b", away: "team-c",
+        home: "iggy", away: "sunrun",
         homeScore: 22, awayScore: 35,
         youtubeUrl: "https://youtu.be/eM0Sa4NaJ04",
         playerStats: [
@@ -149,7 +164,7 @@ var seasons = {
       {
         id: "2026-g7",
         date: "2026-06-09",
-        home: "team-b", away: "team-a",
+        home: "iggy", away: "cuties",
         homeScore: 17, awayScore: 20,
         youtubeUrl: "https://youtu.be/QoZQ9gTL_4Q",
         playerStats: [
@@ -169,14 +184,14 @@ var seasons = {
       {
         id: "2026-g8",
         date: "2026-08-08",
-        home: "team-d", away: "team-c",
+        home: "d", away: "sunrun",
         homeScore: null, awayScore: null,
         playerStats: []
       },
       {
         id: "2026-g9",
         date: "2026-07-15",
-        home: "team-c", away: "team-a",
+        home: "sunrun", away: "cuties",
         homeScore: 21, awayScore: 18,
         youtubeUrl: "https://youtu.be/E7BB5useJak",
         playerStats: [
@@ -199,21 +214,21 @@ var seasons = {
       {
         id: "2026-g10",
         date: "2026-08-11",
-        home: "team-d", away: "team-b",
+        home: "d", away: "iggy",
         homeScore: null, awayScore: null,
         playerStats: []
       },
       {
         id: "2026-g11",
         date: "2026-08-15",
-        home: "team-d", away: "team-a",
+        home: "d", away: "cuties",
         homeScore: null, awayScore: null,
         playerStats: []
       },
       {
         id: "2026-g12",
         date: "2026-08-15",
-        home: "team-c", away: "team-b",
+        home: "sunrun", away: "iggy",
         homeScore: null, awayScore: null,
         playerStats: []
       },
