@@ -185,8 +185,23 @@ var seasons = {
         id: "2026-g8",
         date: "2026-08-08",
         home: "d", away: "sunrun",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        homeScore: 21, awayScore: 18,
+        youtubeUrl: "https://youtu.be/gxBYzFsJ8a0",
+        playerStats: [
+          {playerId: "p29", points: 8, rebounds: 8, assists: 2, blocks: 1, steals: 2},
+          {playerId: "p3", points: 4, rebounds: 10, assists: 1, blocks: 0, steals: 0},
+          {playerId: "p11", points: 1, rebounds: 11, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p20", points: 4, rebounds: 6, assists: 1, blocks: 0, steals: 1},
+          {playerId: "p23", points: 1, rebounds: 8, assists: 2, blocks: 0, steals: 1},
+
+          {playerId: "p6", points: 2, rebounds: 19, assists: 2, blocks: 0, steals: 0},
+          {playerId: "p9", points: 2, rebounds: 2, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p15", points: 0, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p5", points: 0, rebounds: 4, assists: 0, blocks: 0, steals: 0},
+          {playerId: "p22", points: 2, rebounds: 5, assists: 5, blocks: 0, steals: 1},
+          {playerId: "p30", points: 5, rebounds: 4, assists: 2, blocks: 0, steals: 0},
+          {playerId: "p31", points: 10, rebounds: 5, assists: 1, blocks: 0, steals: 1},
+        ]
       },
       {
         id: "2026-g9",
