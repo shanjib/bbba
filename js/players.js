@@ -33,4 +33,7 @@ const players = [
     {id: "mehd", name: "Mehdi Islam"},
     {id: "afif", name: "Afif Abdur-Rahman"},
     {id: "priy", name: "Priyak Parvez"},
+    {id: "pina", name: "Faisal Abid"},
+    {id: "zari", name: "Adnan Jalal"},
+    {id: "sami", name: "Samin Basir"},
 ];
