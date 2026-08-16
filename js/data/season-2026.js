@@ -15,8 +15,8 @@ var seasons = {
   ...(typeof seasons !== "undefined" ? seasons : {}),
   "2026": {
     teams: [
-      {id: "cuties", name: "The Cuties",   playerIds: ["shaw", "shak", "nafe", "zami", "salw", "shaf", "sami"]},
-      {id: "iggy", name: "Team Igoudala",  playerIds: ["zahi", "shan", "owas", "saze", "farh", "aref", "agho", "raje", "pina"]},
+      {id: "cuties", name: "The Cuties",   playerIds: ["shaw", "shak", "nafe", "zami", "salw", "shaf"]},
+      {id: "iggy", name: "Team Igoudala",  playerIds: ["zahi", "shan", "owas", "saze", "farh", "aref", "agho", "raje", "pina", "sami"]},
       {id: "sunrun", name: "SunRun, Inc.", playerIds: ["mash", "owal", "nibr", "rezw", "shad", "raki", "imra", "mehd"]},
       {id: "d", name: "Team Dchampions",   playerIds: ["iram", "eric", "shih", "tays", "niha", "aroy", "tanb", "afif", "priy", "zari"]},
     ],
@@ -255,15 +255,46 @@ var seasons = {
         id: "2026-g11",
         date: "2026-08-15",
         home: "d", away: "cuties",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        homeScore: 14, awayScore: 16,
+        youtubeUrl: "https://youtu.be/XbiGDBr4JQU",
+        playerStats: [
+          {playerId: "iram", points: 1, rebounds: 17, assists: 0, blocks: 2, steals: 1},
+          {playerId: "shih", points: 1, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+          {playerId: "tays", points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0},
+          {playerId: "niha", points: 0, rebounds: 1, assists: 1, blocks: 0, steals: 1},
+          {playerId: "aroy", points: 3, rebounds: 3, assists: 3, blocks: 0, steals: 0},
+          {playerId: "afif", points: 4, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+          {playerId: "priy", points: 0, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+          {playerId: "zari", points: 5, rebounds: 9, assists: 2, blocks: 0, steals: 2},
+
+          {playerId: "shaw", points: 12, rebounds: 15, assists: 1, blocks: 3, steals: 2},
+          {playerId: "shak", points: 3, rebounds: 10, assists: 2, blocks: 1, steals: 0},
+          {playerId: "nafe", points: 0, rebounds: 5, assists: 0, blocks: 0, steals: 0},
+          {playerId: "zami", points: 1, rebounds: 11, assists: 1, blocks: 0, steals: 1},
+          {playerId: "salw", points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0},
+        ]
       },
       {
         id: "2026-g12",
         date: "2026-08-15",
         home: "sunrun", away: "iggy",
-        homeScore: null, awayScore: null,
-        playerStats: []
+        homeScore: 29, awayScore: 23,
+        youtubeUrl: "https://youtu.be/vBfwhxWczGA",
+        playerStats: [
+          // {playerId: "mash", points: 2, rebounds: 8, assists: 3, blocks: 0, steals: 3},
+          // {playerId: "mehd", points: 5, rebounds: 2, assists: 2, blocks: 0, steals: 2},
+          // {playerId: "rezw", points: 6, rebounds: 9, assists: 0, blocks: 1, steals: 1},
+          // {playerId: "imra", points: 0, rebounds: 6, assists: 1, blocks: 0, steals: 0},
+          // {playerId: "raki", points: 0, rebounds: 2, assists: 2, blocks: 0, steals: 4},
+          // {playerId: "shad", points: 0, rebounds: 2, assists: 2, blocks: 0, steals: 4},
+          //
+          // {playerId: "shan", points: 4, rebounds: 5, assists: 2, blocks: 0, steals: 0},
+          // {playerId: "zahi", points: 7, rebounds: 16, assists: 2, blocks: 0, steals: 3},
+          // {playerId: "raje", points: 1, rebounds: 4, assists: 3, blocks: 0, steals: 0},
+          // {playerId: "saze", points: 1, rebounds: 1, assists: 0, blocks: 0, steals: 0},
+          // {playerId: "farh", points: 0, rebounds: 4, assists: 0, blocks: 0, steals: 0},
+          // {playerId: "sami", points: 0, rebounds: 2, assists: 1, blocks: 1, steals: 1},
+        ]
       },
     ]
   }
