@@ -281,19 +281,19 @@ var seasons = {
         homeScore: 29, awayScore: 23,
         youtubeUrl: "https://youtu.be/vBfwhxWczGA",
         playerStats: [
-          // {playerId: "mash", points: 2, rebounds: 8, assists: 3, blocks: 0, steals: 3},
-          // {playerId: "mehd", points: 5, rebounds: 2, assists: 2, blocks: 0, steals: 2},
-          // {playerId: "rezw", points: 6, rebounds: 9, assists: 0, blocks: 1, steals: 1},
-          // {playerId: "imra", points: 0, rebounds: 6, assists: 1, blocks: 0, steals: 0},
-          // {playerId: "raki", points: 0, rebounds: 2, assists: 2, blocks: 0, steals: 4},
-          // {playerId: "shad", points: 0, rebounds: 2, assists: 2, blocks: 0, steals: 4},
-          //
-          // {playerId: "shan", points: 4, rebounds: 5, assists: 2, blocks: 0, steals: 0},
-          // {playerId: "zahi", points: 7, rebounds: 16, assists: 2, blocks: 0, steals: 3},
-          // {playerId: "raje", points: 1, rebounds: 4, assists: 3, blocks: 0, steals: 0},
-          // {playerId: "saze", points: 1, rebounds: 1, assists: 0, blocks: 0, steals: 0},
-          // {playerId: "farh", points: 0, rebounds: 4, assists: 0, blocks: 0, steals: 0},
-          // {playerId: "sami", points: 0, rebounds: 2, assists: 1, blocks: 1, steals: 1},
+          {playerId: "mash", points: 7, rebounds: 10, assists: 3, blocks: 0, steals: 0},
+          {playerId: "mehd", points: 8, rebounds: 8, assists: 2, blocks: 0, steals: 2},
+          {playerId: "rezw", points: 4, rebounds: 4, assists: 1, blocks: 0, steals: 1},
+          {playerId: "raki", points: 7, rebounds: 5, assists: 2, blocks: 1, steals: 1},
+          {playerId: "imra", points: 2, rebounds: 5, assists: 6, blocks: 0, steals: 0},
+          {playerId: "shad", points: 1, rebounds: 5, assists: 2, blocks: 0, steals: 1},
+
+          {playerId: "shan", points: 8, rebounds: 4, assists: 0, blocks: 0, steals: 1},
+          {playerId: "zahi", points: 12, rebounds: 7, assists: 6, blocks: 0, steals: 4},
+          {playerId: "raje", points: 0, rebounds: 6, assists: 3, blocks: 0, steals: 2},
+          {playerId: "saze", points: 0, rebounds: 5, assists: 1, blocks: 0, steals: 0},
+          {playerId: "farh", points: 3, rebounds: 10, assists: 0, blocks: 0, steals: 3},
+          {playerId: "sami", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1},
         ]
       },
     ]
