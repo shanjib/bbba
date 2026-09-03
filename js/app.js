@@ -284,6 +284,24 @@ function renderAbout() {
       <div class="quick-stat"><span class="qs-num">${total - played}</span><span class="qs-label">Games Remaining</span></div>
     `;
   }
+
+  // Championship banner
+  const bannerEl = document.getElementById("champion-banner");
+  if (bannerEl && currentData?.champion) {
+    const champ = currentData.teams.find(t => t.id === currentData.champion);
+    if (champ) {
+      bannerEl.innerHTML = `
+        <div class="champion-banner">
+          <span class="champion-trophy">🏆</span>
+          <div class="champion-text">
+            <div class="champion-label">${config.currentSeason} BBBA Champions</div>
+            <div class="champion-name">${champ.name}</div>
+          </div>
+          <span class="champion-trophy">🏆</span>
+        </div>`;
+      bannerEl.style.display = "block";
+    }
+  }
 }
 
 // ─── Page: Schedule ───────────────────────────────────────────────────────────
@@ -301,9 +319,60 @@ function renderSchedule() {
 
   const played = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
   const upcoming = data.games.filter(g => !isPlayed(g));
+  const playoffs = data.playoffs ?? [];
 
   let html = "";
 
+  // ── Playoffs (always at top if they exist) ──
+  if (playoffs.length) {
+    html += `<h2 class="section-subheading playoff-heading">🏆 Playoffs</h2>`;
+    playoffs.forEach(g => {
+      const home = g.home ? getTeam(g.home, config.currentSeason) : null;
+      const away = g.away ? getTeam(g.away, config.currentSeason) : null;
+      const played = isPlayed(g);
+      const homeWin = played && g.homeScore > g.awayScore;
+
+      if (played) {
+        html += `
+          <div class="game-card completed playoff-card">
+            <div class="game-date">
+              <span class="round-badge">${g.round}</span>
+              ${formatDate(g.date)}
+            </div>
+            <div class="game-matchup">
+              <span class="team-name ${homeWin ? "winner" : ""}">${home?.name ?? g.home}</span>
+              <span class="score-block">
+                <span class="${homeWin ? "score-win" : "score-loss"}">${g.homeScore}</span>
+                <span class="score-sep">–</span>
+                <span class="${!homeWin ? "score-win" : "score-loss"}">${g.awayScore}</span>
+              </span>
+              <span class="team-name ${!homeWin ? "winner" : ""}">${away?.name ?? g.away}</span>
+            </div>
+            <div class="game-card-links">
+              ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
+              <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
+            </div>
+          </div>`;
+      } else {
+        html += `
+          <div class="game-card upcoming playoff-card">
+            <div class="game-date">
+              <span class="round-badge">${g.round}</span>
+              ${formatDate(g.date)}
+            </div>
+            <div class="game-matchup">
+              ${home && away
+          ? `<span class="team-name">${home.name}</span>
+                   <span class="vs-badge">VS</span>
+                   <span class="team-name">${away.name}</span>`
+          : `<span class="tbd-label">Matchup TBD</span>`}
+            </div>
+          </div>`;
+      }
+    });
+  }
+
+  // ── Completed regular season games ──
   if (played.length) {
     html += `<h2 class="section-subheading">Completed Games</h2>`;
     played.forEach(g => {
@@ -324,12 +393,13 @@ function renderSchedule() {
           </div>
           <div class="game-card-links">
             ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
-            <a class="box-score-link" href="stats.html?game=${g.id}">Box Score →</a>
+            <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
           </div>
         </div>`;
     });
   }
 
+  // ── Upcoming regular season games ──
   if (upcoming.length) {
     html += `<h2 class="section-subheading">Upcoming Games</h2>`;
     upcoming.forEach(g => {
@@ -400,7 +470,7 @@ function renderTeams(seasonKey) {
   container.innerHTML = data.teams.map(team => {
     const roster = team.playerIds.map(id => getPlayer(id)).filter(Boolean);
 
-    let rosterHtml;
+    let rosterHtml = "";
     if (roster.length) {
       rosterHtml = `
         <table class="roster-table">
@@ -472,10 +542,12 @@ function renderStats(seasonKey) {
 }
 
 function renderBoxScore(gameId, container) {
-  // Find game across all seasons
+  // Find game across all seasons — check both games and playoffs arrays
   let game = null, seasonKey = null;
   for (const sk of config.seasons) {
-    const found = getSeasonData(sk)?.games.find(g => g.id === gameId);
+    const data = getSeasonData(sk);
+    const found = data?.games.find(g => g.id === gameId)
+      ?? data?.playoffs?.find(g => g.id === gameId);
     if (found) {
       game = found;
       seasonKey = sk;
@@ -615,7 +687,7 @@ function renderStatsLeaders(seasonKey, container) {
           const away = getTeam(g.away, seasonKey);
           const homeWin = g.homeScore > g.awayScore;
           return `
-                <a href="stats.html?game=${g.id}" class="box-score-item">
+                <a href="stats?game=${g.id}" class="box-score-item">
                   <span class="bsi-date">${formatDate(g.date)}</span>
                   <span class="bsi-matchup">
                     <span class="${homeWin ? "bsi-winner" : ""}">${home?.name ?? g.home} ${g.homeScore}</span>

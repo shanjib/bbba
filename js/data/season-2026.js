@@ -296,6 +296,34 @@ var seasons = {
           {playerId: "sami", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1},
         ]
       },
+    ],
+    champion: null,
+    playoffs: [
+      {
+        id: "2026-sf1",
+        round: "Semifinal - Contested",
+        date: "2026-08-25",
+        home: "d", away: "sunrun",
+        homeScore: 24, awayScore: 25,
+        youtubeUrl: "https://youtu.be/gxBYzFsJ8a0",
+        playerStats: [
+          {playerId: "mehd", points: 7, rebounds: 13, assists: 6, blocks: 0, steals: 0},
+          {playerId: "mash", points: 2, rebounds: 4, assists: 0, blocks: 0, steals: 1},
+          {playerId: "rezw", points: 5, rebounds: 8, assists: 0, blocks: 0, steals: 1},
+          {playerId: "nibr", points: 3, rebounds: 4, assists: 0, blocks: 0, steals: 0},
+          {playerId: "imra", points: 1, rebounds: 6, assists: 3, blocks: 0, steals: 0},
+          {playerId: "owal", points: 7, rebounds: 3, assists: 1, blocks: 0, steals: 1},
+          {playerId: "shad", points: 0, rebounds: 5, assists: 5, blocks: 0, steals: 1},
+
+          {playerId: "iram", points: 0, rebounds: 11, assists: 2, blocks: 0, steals: 1},
+          {playerId: "shih", points: 6, rebounds: 6, assists: 0, blocks: 0, steals: 1},
+          {playerId: "tays", points: 1, rebounds: 1, assists: 0, blocks: 0, steals: 0},
+          {playerId: "niha", points: 0, rebounds: 1, assists: 0, blocks: 0, steals: 0},
+          {playerId: "aroy", points: 2, rebounds: 4, assists: 7, blocks: 0, steals: 3},
+          {playerId: "afif", points: 9, rebounds: 3, assists: 2, blocks: 0, steals: 1},
+          {playerId: "priy", points: 8, rebounds: 1, assists: 2, blocks: 0, steals: 4},
+        ]
+      },
     ]
   }
 };

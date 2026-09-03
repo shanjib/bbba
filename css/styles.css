@@ -742,6 +742,72 @@ img { display: block; max-width: 100%; }
     margin-bottom: 16px;
 }
 
+/* ─── Playoff Cards ──────────────────────────────────────────────────────────── */
+.playoff-heading {
+    color: var(--red-dark);
+}
+
+.playoff-card {
+    border-left-color: #c9910a !important;
+    background: #fffdf5;
+}
+
+.round-badge {
+    display: inline-block;
+    background: #c9910a;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.tbd-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    font-style: italic;
+}
+
+/* ─── Championship Banner ────────────────────────────────────────────────────── */
+.champion-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 20px rgba(201, 145, 10, 0.4);
+    text-align: center;
+}
+
+.champion-trophy {
+    font-size: 48px;
+    line-height: 1;
+}
+
+.champion-label {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #5a3a00;
+    margin-bottom: 4px;
+}
+
+.champion-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: #3a2400;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
 /* ─── Hamburger Button ───────────────────────────────────────────────────────── */
 .hamburger {
     display: none;
