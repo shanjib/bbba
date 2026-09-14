@@ -324,6 +324,31 @@ var seasons = {
           {playerId: "priy", points: 8, rebounds: 1, assists: 2, blocks: 0, steals: 4},
         ]
       },
+      {
+        id: "2026-sf2",
+        round: "Semifinal",
+        date: "2026-09-03",
+        home: "d", away: "sunrun",
+        homeScore: 18, awayScore: 21,
+        youtubeUrl: "https://youtu.be/lHy0jlO2FYc",
+        playerStats: [
+          {playerId: "mehd", points: 4, rebounds: 12, assists: 1, blocks: 0, steals: 1},
+          {playerId: "mash", points: 2, rebounds: 8, assists: 1, blocks: 0, steals: 0},
+          {playerId: "rezw", points: 5, rebounds: 7, assists: 1, blocks: 0, steals: 0},
+          {playerId: "nibr", points: 3, rebounds: 4, assists: 1, blocks: 0, steals: 0},
+          {playerId: "imra", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 2},
+          {playerId: "shad", points: 3, rebounds: 3, assists: 4, blocks: 0, steals: 0},
+          {playerId: "raki", points: 4, rebounds: 5, assists: 0, blocks: 0, steals: 2},
+
+          {playerId: "iram", points: 6, rebounds: 17, assists: 3, blocks: 0, steals: 1},
+          {playerId: "shih", points: 0, rebounds: 3, assists: 0, blocks: 0, steals: 0},
+          {playerId: "tays", points: 1, rebounds: 4, assists: 0, blocks: 1, steals: 0},
+          {playerId: "niha", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1},
+          {playerId: "aroy", points: 1, rebounds: 5, assists: 4, blocks: 0, steals: 1},
+          {playerId: "afif", points: 2, rebounds: 2, assists: 0, blocks: 0, steals: 0},
+          {playerId: "priy", points: 8, rebounds: 4, assists: 1, blocks: 0, steals: 1},
+        ]
+      },
     ]
   }
 };
