@@ -15,8 +15,8 @@ var seasons = {
   ...(typeof seasons !== "undefined" ? seasons : {}),
   "2026": {
     teams: [
-      {id: "cuties", name: "The Cuties",   playerIds: ["shaw", "shak", "nafe", "zami", "salw", "shaf"]},
-      {id: "iggy", name: "Team Igoudala",  playerIds: ["zahi", "shan", "owas", "saze", "farh", "aref", "agho", "raje", "pina", "sami"]},
+      {id: "cuties", name: "The Cuties",   playerIds: ["shaw", "shak", "nafe", "zami", "salw", "shaf", "sami"]},
+      {id: "iggy", name: "Team Igoudala",  playerIds: ["zahi", "shan", "owas", "saze", "farh", "aref", "agho", "raje", "pina"]},
       {id: "sunrun", name: "SunRun, Inc.", playerIds: ["mash", "owal", "nibr", "rezw", "shad", "raki", "imra", "mehd"]},
       {id: "d", name: "Team Dchampions",   playerIds: ["iram", "eric", "shih", "tays", "niha", "aroy", "tanb", "afif", "priy", "zari"]},
     ],
