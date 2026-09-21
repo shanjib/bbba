@@ -774,16 +774,21 @@ img { display: block; max-width: 100%; }
 
 /* ─── Championship Banner ────────────────────────────────────────────────────── */
 .champion-banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
     background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
     border-radius: var(--radius);
     padding: 28px 32px;
     margin-bottom: 28px;
     box-shadow: 0 4px 20px rgba(201, 145, 10, 0.4);
     text-align: center;
+    overflow: hidden;
+}
+
+.champion-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .champion-trophy {
@@ -806,6 +811,14 @@ img { display: block; max-width: 100%; }
     color: #3a2400;
     letter-spacing: 2px;
     line-height: 1;
+}
+
+.champion-photo {
+    width: 100%;
+    max-height: 550px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
 }
 
 /* ─── Hamburger Button ───────────────────────────────────────────────────────── */

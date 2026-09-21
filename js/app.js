@@ -42,7 +42,7 @@ function isPlayed(game) {
 function formatDate(dateStr) {
   if (!dateStr) return "TBD";
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"});
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
 function avg(total, gp) {
@@ -89,8 +89,7 @@ function renderSeasonSwitcher(activeSeason) {
 
 // ─── Standings Derivation ─────────────────────────────────────────────────────
 
-function deriveStandings(seasonKey) {
-  const data = getSeasonData(seasonKey);
+function deriveStandings(data) {
   if (!data) return [];
 
   const map = {};
@@ -105,7 +104,7 @@ function deriveStandings(seasonKey) {
       h2h: {}
     };
     data.teams.forEach(other => {
-      if (other.id !== t.id) map[t.id].h2h[other.id] = {wins: 0, pointDiff: 0};
+      if (other.id !== t.id) map[t.id].h2h[other.id] = { wins: 0, pointDiff: 0 };
     });
   });
 
@@ -115,9 +114,9 @@ function deriveStandings(seasonKey) {
     if (!home || !away) return;
     const diff = g.homeScore - g.awayScore;
 
-    home.pointsScored += g.homeScore;
+    home.pointsScored  += g.homeScore;
     home.pointsAllowed += g.awayScore;
-    away.pointsScored += g.awayScore;
+    away.pointsScored  += g.awayScore;
     away.pointsAllowed += g.homeScore;
 
     if (g.homeScore > g.awayScore) {
@@ -170,64 +169,16 @@ function deriveSeasonStats(seasonKey) {
     g.playerStats.forEach(ps => {
       if (!map[ps.playerId]) return;
       map[ps.playerId].gamesPlayed++;
-      map[ps.playerId].totalPoints += ps.points ?? 0;
+      map[ps.playerId].totalPoints   += ps.points   ?? 0;
       map[ps.playerId].totalRebounds += ps.rebounds ?? 0;
-      map[ps.playerId].totalAssists += ps.assists ?? 0;
-      map[ps.playerId].totalBlocks += ps.blocks ?? 0;
-      map[ps.playerId].totalSteals += ps.steals ?? 0;
+      map[ps.playerId].totalAssists  += ps.assists  ?? 0;
+      map[ps.playerId].totalBlocks   += ps.blocks   ?? 0;
+      map[ps.playerId].totalSteals   += ps.steals   ?? 0;
     });
   });
 
   return Object.values(map);
 }
-
-function deriveCareerStats() {
-  const map = {};
-  players.forEach(p => {
-    map[p.id] = {
-      playerId: p.id,
-      name: p.name,
-      seasonsPlayed: [],
-      gamesPlayed: 0,
-      totalPoints: 0,
-      totalRebounds: 0,
-      totalAssists: 0,
-      totalBlocks: 0,
-      totalSteals: 0
-    };
-  });
-
-  config.seasons.forEach(seasonKey => {
-    const data = getSeasonData(seasonKey);
-    if (!data) return;
-
-    // track per-season game counts to detect if player appeared this season
-    const seasonGP = {};
-
-    data.games.filter(isPlayed).forEach(g => {
-      g.playerStats.forEach(ps => {
-        if (!map[ps.playerId]) return;
-        if (!seasonGP[ps.playerId]) seasonGP[ps.playerId] = 0;
-        seasonGP[ps.playerId]++;
-        map[ps.playerId].gamesPlayed++;
-        map[ps.playerId].totalPoints += ps.points ?? 0;
-        map[ps.playerId].totalRebounds += ps.rebounds ?? 0;
-        map[ps.playerId].totalAssists += ps.assists ?? 0;
-        map[ps.playerId].totalBlocks += ps.blocks ?? 0;
-        map[ps.playerId].totalSteals += ps.steals ?? 0;
-      });
-    });
-
-    Object.keys(seasonGP).forEach(pid => {
-      if (!map[pid].seasonsPlayed.includes(seasonKey)) {
-        map[pid].seasonsPlayed.push(seasonKey);
-      }
-    });
-  });
-
-  return Object.values(map).filter(p => p.gamesPlayed > 0);
-}
-
 // ─── Partials ─────────────────────────────────────────────────────────────────
 
 // Derive the base URL from the app.js script tag itself.
@@ -262,6 +213,34 @@ async function loadPartials() {
   if (footerEl) footerEl.outerHTML = footerHTML;
 }
 
+function championshipBanner(currentData) {
+  const bannerEl = document.getElementById("champion-banner");
+  if (bannerEl && currentData?.champion) {
+    const champ = currentData.teams.find(t => t.id === currentData.champion);
+    if (champ) {
+      const imgPath = `assets/champion-${config.currentSeason}.jpeg`;
+      bannerEl.innerHTML = `
+        <div class="champion-banner">
+          <div class="champion-header">
+            <span class="champion-trophy">🏆</span>
+            <div class="champion-text">
+              <div class="champion-label">${config.currentSeason} BBBA Champions</div>
+              <div class="champion-name">${champ.name}</div>
+            </div>
+            <span class="champion-trophy">🏆</span>
+          </div>
+          <img
+            src="${imgPath}"
+            alt="${champ.name} — ${config.currentSeason} BBBA Champions"
+            class="champion-photo"
+            onerror="this.style.display='none'"
+          />
+        </div>`;
+      bannerEl.style.display = "block";
+    }
+  }
+}
+
 // ─── Page: About ──────────────────────────────────────────────────────────────
 
 function renderAbout() {
@@ -273,7 +252,7 @@ function renderAbout() {
 
   const currentData = getSeasonData(config.currentSeason);
   const played = currentData ? currentData.games.filter(isPlayed).length : 0;
-  const total = currentData ? currentData.games.length : 0;
+  const total  = currentData ? currentData.games.length : 0;
 
   const statsEl = document.getElementById("league-quick-stats");
   if (statsEl) {
@@ -285,23 +264,7 @@ function renderAbout() {
     `;
   }
 
-  // Championship banner
-  const bannerEl = document.getElementById("champion-banner");
-  if (bannerEl && currentData?.champion) {
-    const champ = currentData.teams.find(t => t.id === currentData.champion);
-    if (champ) {
-      bannerEl.innerHTML = `
-        <div class="champion-banner">
-          <span class="champion-trophy">🏆</span>
-          <div class="champion-text">
-            <div class="champion-label">${config.currentSeason} BBBA Champions</div>
-            <div class="champion-name">${champ.name}</div>
-          </div>
-          <span class="champion-trophy">🏆</span>
-        </div>`;
-      bannerEl.style.display = "block";
-    }
-  }
+  championshipBanner(currentData);
 }
 
 // ─── Page: Schedule ───────────────────────────────────────────────────────────
@@ -310,14 +273,12 @@ function renderSchedule() {
   const container = document.getElementById("schedule-container");
   if (!container) return;
 
-  // Schedule always shows current season
   const data = getSeasonData(config.currentSeason);
-  if (!data) {
-    container.innerHTML = `<p class="empty-state">No schedule data found.</p>`;
-    return;
-  }
+  if (!data) { container.innerHTML = `<p class="empty-state">No schedule data found.</p>`; return; }
 
-  const played = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
+  championshipBanner(data)
+
+  const played   = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
   const upcoming = data.games.filter(g => !isPlayed(g));
   const playoffs = data.playoffs ?? [];
 
@@ -327,9 +288,9 @@ function renderSchedule() {
   if (playoffs.length) {
     html += `<h2 class="section-subheading playoff-heading">🏆 Playoffs</h2>`;
     playoffs.forEach(g => {
-      const home = g.home ? getTeam(g.home, config.currentSeason) : null;
-      const away = g.away ? getTeam(g.away, config.currentSeason) : null;
-      const played = isPlayed(g);
+      const home    = g.home ? getTeam(g.home, config.currentSeason) : null;
+      const away    = g.away ? getTeam(g.away, config.currentSeason) : null;
+      const played  = isPlayed(g);
       const homeWin = played && g.homeScore > g.awayScore;
 
       if (played) {
@@ -376,8 +337,8 @@ function renderSchedule() {
   if (played.length) {
     html += `<h2 class="section-subheading">Completed Games</h2>`;
     played.forEach(g => {
-      const home = getTeam(g.home, config.currentSeason);
-      const away = getTeam(g.away, config.currentSeason);
+      const home    = getTeam(g.home, config.currentSeason);
+      const away    = getTeam(g.away, config.currentSeason);
       const homeWin = g.homeScore > g.awayScore;
       html += `
         <div class="game-card completed">
@@ -427,14 +388,16 @@ function renderStandings(seasonKey) {
   const tbody = document.getElementById("standings-body");
   if (!tbody) return;
 
-  const standings = deriveStandings(seasonKey);
+  const data = getSeasonData(seasonKey);
+  championshipBanner(data);
+  const standings = deriveStandings(data);
   if (!standings.length) {
     tbody.innerHTML = `<tr><td colspan="8" class="empty-state">No data yet.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = standings.map((s, i) => {
-    const gp = s.wins + s.losses;
+    const gp   = s.wins + s.losses;
     const diff = s.pointsScored - s.pointsAllowed;
     const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
     return `
@@ -458,10 +421,8 @@ function renderTeams(seasonKey) {
   if (!container) return;
 
   const data = getSeasonData(seasonKey);
-  if (!data) {
-    container.innerHTML = `<p class="empty-state">No data for this season.</p>`;
-    return;
-  }
+  championshipBanner(data);
+  if (!data) { container.innerHTML = `<p class="empty-state">No data for this season.</p>`; return; }
 
   const allStats = deriveSeasonStats(seasonKey);
 
@@ -470,27 +431,22 @@ function renderTeams(seasonKey) {
   container.innerHTML = data.teams.map(team => {
     const roster = team.playerIds.map(id => getPlayer(id)).filter(Boolean);
 
-    let rosterHtml = "";
+    let rosterHtml;
     if (roster.length) {
       rosterHtml = `
         <table class="roster-table">
           <thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
           <tbody>
             ${roster.map(p => {
-        const s = allStats.find(x => x.playerId === p.id) || {
-          gamesPlayed: 0,
-          totalPoints: 0,
-          totalRebounds: 0,
-          totalAssists: 0
-        };
+        const s = allStats.find(x => x.playerId === p.id) || { gamesPlayed: 0, totalPoints: 0, totalRebounds: 0, totalAssists: 0 };
         return `<tr>
                 <td class="player-name">${p.name}</td>
                 <td>${s.gamesPlayed}</td>
-                <td>${avg(s.totalPoints, s.gamesPlayed)}</td>
+                <td>${avg(s.totalPoints,   s.gamesPlayed)}</td>
                 <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
-                <td>${avg(s.totalAssists, s.gamesPlayed)}</td>
-                <td>${avg(s.totalBlocks, s.gamesPlayed)}</td>
-                <td>${avg(s.totalSteals, s.gamesPlayed)}</td>
+                <td>${avg(s.totalAssists,  s.gamesPlayed)}</td>
+                <td>${avg(s.totalBlocks,   s.gamesPlayed)}</td>
+                <td>${avg(s.totalSteals,   s.gamesPlayed)}</td>
                 <td>${s.totalPoints}</td>
                 <td>${s.totalRebounds}</td>
                 <td>${s.totalAssists}</td>
@@ -545,14 +501,10 @@ function renderBoxScore(gameId, container) {
   // Find game across all seasons — check both games and playoffs arrays
   let game = null, seasonKey = null;
   for (const sk of config.seasons) {
-    const data = getSeasonData(sk);
+    const data  = getSeasonData(sk);
     const found = data?.games.find(g => g.id === gameId)
       ?? data?.playoffs?.find(g => g.id === gameId);
-    if (found) {
-      game = found;
-      seasonKey = sk;
-      break;
-    }
+    if (found) { game = found; seasonKey = sk; break; }
   }
 
   if (!game || !isPlayed(game)) {
@@ -560,8 +512,8 @@ function renderBoxScore(gameId, container) {
     return;
   }
 
-  const home = getTeam(game.home, seasonKey);
-  const away = getTeam(game.away, seasonKey);
+  const home    = getTeam(game.home, seasonKey);
+  const away    = getTeam(game.away, seasonKey);
   const homeWin = game.homeScore > game.awayScore;
 
   const homeStats = game.playerStats.filter(ps => home?.playerIds.includes(ps.playerId));
@@ -571,13 +523,13 @@ function renderBoxScore(gameId, container) {
     if (!statsArr.length) return `<p class="empty-state">No stats recorded.</p>`;
 
     const totals = statsArr.reduce((acc, ps) => {
-      acc.points += ps.points ?? 0;
+      acc.points   += ps.points   ?? 0;
       acc.rebounds += ps.rebounds ?? 0;
-      acc.assists += ps.assists ?? 0;
-      acc.blocks += ps.blocks ?? 0;
-      acc.steals += ps.steals ?? 0;
+      acc.assists  += ps.assists  ?? 0;
+      acc.blocks   += ps.blocks   ?? 0;
+      acc.steals   += ps.steals   ?? 0;
       return acc;
-    }, {points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0});
+    }, { points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0 });
 
     return `
       <table class="roster-table">
@@ -587,11 +539,11 @@ function renderBoxScore(gameId, container) {
       const p = getPlayer(ps.playerId);
       return `<tr>
               <td class="player-name">${p ? p.name : ps.playerId}</td>
-              <td>${ps.points ?? 0}</td>
+              <td>${ps.points   ?? 0}</td>
               <td>${ps.rebounds ?? 0}</td>
-              <td>${ps.assists ?? 0}</td>
-              <td>${ps.blocks ?? 0}</td>
-              <td>${ps.steals ?? 0}</td>
+              <td>${ps.assists  ?? 0}</td>
+              <td>${ps.blocks   ?? 0}</td>
+              <td>${ps.steals   ?? 0}</td>
             </tr>`;
     }).join("")}
         </tbody>
@@ -634,16 +586,16 @@ function renderBoxScore(gameId, container) {
 
 function renderStatsLeaders(seasonKey, container) {
   const allStats = deriveSeasonStats(seasonKey).filter(s => s.gamesPlayed > 0);
-  const data = getSeasonData(seasonKey);
+  const data     = getSeasonData(seasonKey);
 
   let html = "";
 
   if (allStats.length) {
-    const byPPG = [...allStats].sort((a, b) => (b.totalPoints / b.gamesPlayed) - (a.totalPoints / a.gamesPlayed));
+    const byPPG = [...allStats].sort((a, b) => (b.totalPoints   / b.gamesPlayed) - (a.totalPoints   / a.gamesPlayed));
     const byRPG = [...allStats].sort((a, b) => (b.totalRebounds / b.gamesPlayed) - (a.totalRebounds / a.gamesPlayed));
-    const byAPG = [...allStats].sort((a, b) => (b.totalAssists / b.gamesPlayed) - (a.totalAssists / a.gamesPlayed));
-    const byBPG = [...allStats].sort((a, b) => (b.totalBlocks / b.gamesPlayed) - (a.totalBlocks / a.gamesPlayed));
-    const bySPG = [...allStats].sort((a, b) => (b.totalSteals / b.gamesPlayed) - (a.totalSteals / a.gamesPlayed));
+    const byAPG = [...allStats].sort((a, b) => (b.totalAssists  / b.gamesPlayed) - (a.totalAssists  / a.gamesPlayed));
+    const byBPG = [...allStats].sort((a, b) => (b.totalBlocks   / b.gamesPlayed) - (a.totalBlocks   / a.gamesPlayed));
+    const bySPG = [...allStats].sort((a, b) => (b.totalSteals   / b.gamesPlayed) - (a.totalSteals   / a.gamesPlayed));
 
     function leaderTable(label, sorted, totalKey) {
       return `
@@ -687,7 +639,7 @@ function renderStatsLeaders(seasonKey, container) {
           const away = getTeam(g.away, seasonKey);
           const homeWin = g.homeScore > g.awayScore;
           return `
-                <a href="stats?game=${g.id}" class="box-score-item">
+                <a href="stats.html?game=${g.id}" class="box-score-item">
                   <span class="bsi-date">${formatDate(g.date)}</span>
                   <span class="bsi-matchup">
                     <span class="${homeWin ? "bsi-winner" : ""}">${home?.name ?? g.home} ${g.homeScore}</span>
@@ -714,11 +666,11 @@ function renderStatsLeaders(seasonKey, container) {
             ${allSorted.map(s => `<tr>
               <td class="player-name">${s.name}</td>
               <td>${s.gamesPlayed}</td>
-              <td>${avg(s.totalPoints, s.gamesPlayed)}</td>
+              <td>${avg(s.totalPoints,   s.gamesPlayed)}</td>
               <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
-              <td>${avg(s.totalAssists, s.gamesPlayed)}</td>
-              <td>${avg(s.totalBlocks, s.gamesPlayed)}</td>
-              <td>${avg(s.totalSteals, s.gamesPlayed)}</td>
+              <td>${avg(s.totalAssists,  s.gamesPlayed)}</td>
+              <td>${avg(s.totalBlocks,   s.gamesPlayed)}</td>
+              <td>${avg(s.totalSteals,   s.gamesPlayed)}</td>
               <td>${s.totalPoints}</td>
               <td>${s.totalRebounds}</td>
               <td>${s.totalAssists}</td>
@@ -783,7 +735,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Hamburger menu toggle
   const hamburgerBtn = document.getElementById("hamburger-btn");
-  const siteNav = document.getElementById("site-nav");
+  const siteNav      = document.getElementById("site-nav");
   if (hamburgerBtn && siteNav) {
     hamburgerBtn.addEventListener("click", () => {
       const isOpen = siteNav.classList.toggle("nav-open");

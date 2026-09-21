@@ -297,7 +297,7 @@ var seasons = {
         ]
       },
     ],
-    champion: null,
+    champion: "cuties",
     playoffs: [
       {
         id: "2026-sf1",
@@ -347,6 +347,29 @@ var seasons = {
           {playerId: "aroy", points: 1, rebounds: 5, assists: 4, blocks: 0, steals: 1},
           {playerId: "afif", points: 2, rebounds: 2, assists: 0, blocks: 0, steals: 0},
           {playerId: "priy", points: 8, rebounds: 4, assists: 1, blocks: 0, steals: 1},
+        ]
+      },
+      {
+        id: "2026-champ",
+        round: "Championship",
+        date: "2026-09-20",
+        home: "cuties", away: "sunrun",
+        homeScore: 22, awayScore: 19,
+        youtubeUrl: "https://youtu.be/udkWIZcxEVg",
+        playerStats: [
+          {playerId: "mash", points: 1, rebounds: 8, assists: 2, blocks: 0, steals: 3},
+          {playerId: "mehd", points: 8, rebounds: 5, assists: 3, blocks: 0, steals: 0},
+          {playerId: "rezw", points: 3, rebounds: 16, assists: 0, blocks: 0, steals: 0},
+          {playerId: "shad", points: 1, rebounds: 2, assists: 0, blocks: 0, steals: 1},
+          {playerId: "owal", points: 1, rebounds: 7, assists: 2, blocks: 0, steals: 1},
+          {playerId: "raki", points: 5, rebounds: 8, assists: 1, blocks: 0, steals: 2},
+
+          {playerId: "shaw", points: 6, rebounds: 10, assists: 1, blocks: 2, steals: 1},
+          {playerId: "shak", points: 11, rebounds: 12, assists: 2, blocks: 0, steals: 2},
+          {playerId: "salw", points: 0, rebounds: 4, assists: 3, blocks: 0, steals: 0},
+          {playerId: "zami", points: 2, rebounds: 10, assists: 1, blocks: 0, steals: 1},
+          {playerId: "shaf", points: 3, rebounds: 6, assists: 0, blocks: 1, steals: 5},
+          {playerId: "sami", points: 0, rebounds: 0, assists: 0, blocks: 0, steals: 0},
         ]
       },
     ]
