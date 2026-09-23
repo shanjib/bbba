@@ -305,7 +305,7 @@ var seasons = {
         date: "2026-08-25",
         home: "d", away: "sunrun",
         homeScore: 24, awayScore: 25,
-        youtubeUrl: "https://youtu.be/gxBYzFsJ8a0",
+        youtubeUrl: "https://youtu.be/nMjcp2RqV00",
         playerStats: [
           {playerId: "mehd", points: 7, rebounds: 13, assists: 6, blocks: 0, steals: 0},
           {playerId: "mash", points: 2, rebounds: 4, assists: 0, blocks: 0, steals: 1},
