@@ -863,6 +863,52 @@ img { display: block; max-width: 100%; }
     display: block;
 }
 
+/* ─── Team Links & Team Page ────────────────────────────────────────────────── */
+.team-link:hover { text-decoration: underline; }
+
+.team-hero .page-title { margin-bottom: 4px; }
+
+.team-playoff-result {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    background: var(--red-light);
+    color: var(--red-dark);
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.team-playoff-result.is-champion {
+    background: #fff5c2;
+    color: #8a6200;
+}
+
+.team-photo {
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-top: 20px;
+}
+
+.team-section { margin-top: 24px; }
+
+.playoff-title { background: #c9910a !important; }
+
+/* Wide tables scroll sideways on narrow screens instead of squashing */
+.table-scroll { overflow-x: auto; }
+.table-scroll .roster-table td,
+.table-scroll .roster-table th { white-space: nowrap; }
+
+.team-stats-table td.pos-diff { color: var(--green); font-weight: 800; }
+.team-stats-table td.neg-diff { color: var(--red);   font-weight: 800; }
+
+.result-win  { color: var(--green); font-weight: 800; }
+.result-loss { color: var(--red);   font-weight: 800; }
+
+.team-game-links { display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+
 /* ─── Hamburger Button ───────────────────────────────────────────────────────── */
 .hamburger {
     display: none;
