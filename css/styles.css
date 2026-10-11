@@ -733,6 +733,16 @@ img { display: block; max-width: 100%; }
 .season-select:hover { border-color: var(--green); }
 .season-select:focus { outline: none; border-color: var(--green); }
 
+/* In the footer: centred above the league line, light text on the dark green */
+.footer-season-switcher {
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.footer-season-switcher .switcher-label { color: rgba(255,255,255,0.7); }
+.footer-season-switcher .season-select:hover,
+.footer-season-switcher .season-select:focus { border-color: #fff; }
+
 /* ─── Stats Section Heading ──────────────────────────────────────────────────── */
 .stats-section-heading {
     font-family: 'Bebas Neue', sans-serif;
