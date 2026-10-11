@@ -39,6 +39,27 @@ function setSeasonParam(seasonKey) {
   window.history.pushState({}, "", url);
 }
 
+// The season the page is showing: a box score belongs to its game's season,
+// everything else follows getActiveSeason()
+function getViewedSeason() {
+  const gameId = new URLSearchParams(window.location.search).get("game");
+  if (gameId) {
+    const { seasonKey } = findGame(gameId);
+    if (seasonKey) return seasonKey;
+  }
+  return getActiveSeason();
+}
+
+// Internal link that keeps the chosen season: adds ?season= when it isn't the
+// current season and leaves the link untouched otherwise
+function seasonHref(href, seasonKey = getViewedSeason()) {
+  if (seasonKey === config.currentSeason) return href;
+  const [path, query = ""] = href.split("?");
+  const params = new URLSearchParams(query);
+  params.set("season", seasonKey);
+  return `${path}?${params}`;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getPlayer(id) {
@@ -49,6 +70,17 @@ function getTeam(id, seasonKey) {
   const data = getSeasonData(seasonKey);
   if (!data) return null;
   return data.teams.find(t => t.id === id) || null;
+}
+
+// Find a game in any season, checking both the games and playoffs arrays
+function findGame(gameId) {
+  for (const sk of config.seasons) {
+    const data  = getSeasonData(sk);
+    const found = data?.games.find(g => g.id === gameId)
+      ?? data?.playoffs?.find(g => g.id === gameId);
+    if (found) return { game: found, seasonKey: sk };
+  }
+  return { game: null, seasonKey: null };
 }
 
 function isPlayed(game) {
@@ -99,10 +131,48 @@ function renderSeasonSwitcher(activeSeason) {
   });
 }
 
-// Update everything that follows the selected season: labels, switcher and page content
+// ─── Past-Season Bar & Season Links ──────────────────────────────────────────
+
+// Bar under the header whenever the page shows a season other than the current one
+function renderPastSeasonBar(seasonKey) {
+  const bar = document.getElementById("past-season-bar");
+  if (!bar) return;
+
+  if (seasonKey === config.currentSeason) {
+    bar.hidden = true;
+    bar.innerHTML = "";
+    return;
+  }
+
+  // Same page without ?season=, keeping any other params. A box score belongs
+  // to its own season, so going back to the current season leaves it for All Stats.
+  const url = new URL(window.location.href);
+  url.searchParams.delete("season");
+  url.searchParams.delete("game");
+
+  bar.innerHTML = `
+    <div class="past-season-inner">
+      You're viewing the ${seasonKey} season
+      <span class="past-season-sep">·</span>
+      <a href="${url.pathname}${url.search}${url.hash}" class="past-season-back">Back to ${config.currentSeason}</a>
+    </div>`;
+  bar.hidden = false;
+}
+
+// The header's nav links and logo are static HTML, so rewrite them from their original href
+function applySeasonLinks(seasonKey) {
+  document.querySelectorAll(".header-inner a[href]").forEach(link => {
+    if (!link.dataset.href) link.dataset.href = link.getAttribute("href");
+    link.setAttribute("href", seasonHref(link.dataset.href, seasonKey));
+  });
+}
+
+// Update everything that follows the selected season: labels, switcher, bar, links and page content
 function applySeason(seasonKey) {
   document.querySelectorAll(".current-season-label").forEach(el => el.textContent = seasonKey);
   renderSeasonSwitcher(seasonKey);
+  renderPastSeasonBar(seasonKey);
+  applySeasonLinks(seasonKey);
   renderPage(seasonKey);
 }
 
@@ -351,7 +421,7 @@ function renderSchedule(seasonKey) {
             </div>
             <div class="game-card-links">
               ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
-              <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
+              <a class="box-score-link" href="${seasonHref(`stats.html?game=${g.id}`, seasonKey)}">Box Score →</a>
             </div>
           </div>`;
       } else {
@@ -394,7 +464,7 @@ function renderSchedule(seasonKey) {
           </div>
           <div class="game-card-links">
             ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
-            <a class="box-score-link" href="stats?game=${g.id}">Box Score →</a>
+            <a class="box-score-link" href="${seasonHref(`stats.html?game=${g.id}`, seasonKey)}">Box Score →</a>
           </div>
         </div>`;
     });
@@ -546,14 +616,8 @@ function renderStats(seasonKey) {
 }
 
 function renderBoxScore(gameId, container) {
-  // Find game across all seasons — check both games and playoffs arrays
-  let game = null, seasonKey = null;
-  for (const sk of config.seasons) {
-    const data  = getSeasonData(sk);
-    const found = data?.games.find(g => g.id === gameId)
-      ?? data?.playoffs?.find(g => g.id === gameId);
-    if (found) { game = found; seasonKey = sk; break; }
-  }
+  // Find game across all seasons
+  const { game, seasonKey } = findGame(gameId);
 
   if (!game || !isPlayed(game)) {
     container.innerHTML = `<p class="empty-state">Box score not available.</p>`;
@@ -609,7 +673,7 @@ function renderBoxScore(gameId, container) {
   }
 
   container.innerHTML = `
-    <a href="stats.html" class="back-link">← All Stats</a>
+    <a href="${seasonHref("stats.html", seasonKey)}" class="back-link">← All Stats</a>
     <div class="box-score-header">
       <div class="bs-team ${homeWin ? "bs-winner" : ""}">
         <div class="bs-team-name">${home?.name ?? game.home}</div>
@@ -687,7 +751,7 @@ function renderStatsLeaders(seasonKey, container) {
           const away = getTeam(g.away, seasonKey);
           const homeWin = g.homeScore > g.awayScore;
           return `
-                <a href="stats.html?game=${g.id}" class="box-score-item">
+                <a href="${seasonHref(`stats.html?game=${g.id}`, seasonKey)}" class="box-score-item">
                   <span class="bsi-date">${formatDate(g.date)}</span>
                   <span class="bsi-matchup">
                     <span class="${homeWin ? "bsi-winner" : ""}">${home?.name ?? g.home} ${g.homeScore}</span>
@@ -777,7 +841,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Highlight active nav link
   const page = currentPage();
   document.querySelectorAll(".nav-link").forEach(link => {
-    const linkPage = link.getAttribute("href").split("/").pop();
+    const linkPage = link.getAttribute("href").split("?")[0].split("/").pop();
     if (linkPage === page) link.classList.add("active");
   });
 
@@ -810,9 +874,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Season labels, footer switcher and page content
-  applySeason(getActiveSeason());
+  // Season labels, footer switcher, past-season bar, links and page content
+  applySeason(getViewedSeason());
 
   // Browser back/forward changes ?season= (and ?game=) without a reload
-  window.addEventListener("popstate", () => applySeason(getActiveSeason()));
+  window.addEventListener("popstate", () => applySeason(getViewedSeason()));
 });

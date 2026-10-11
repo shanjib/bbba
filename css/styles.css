@@ -743,6 +743,38 @@ img { display: block; max-width: 100%; }
 .footer-season-switcher .season-select:hover,
 .footer-season-switcher .season-select:focus { border-color: #fff; }
 
+/* ─── Past-Season Bar ────────────────────────────────────────────────────────── */
+/* Strip along the bottom of the sticky header while a non-current season is shown */
+.past-season-bar {
+    background: var(--green-light);
+    color: var(--green-dark);
+    border-top: 2px solid var(--red);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.past-season-bar[hidden] { display: none; }
+
+.past-season-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 8px 24px;
+    text-align: center;
+}
+
+.past-season-sep {
+    margin: 0 6px;
+    color: var(--muted);
+}
+
+.past-season-back {
+    color: var(--red);
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.past-season-back:hover { color: var(--red-dark); }
+
 /* ─── Stats Section Heading ──────────────────────────────────────────────────── */
 .stats-section-heading {
     font-family: 'Bebas Neue', sans-serif;
