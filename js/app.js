@@ -433,6 +433,24 @@ function renderAbout(seasonKey) {
     `;
 
   championshipBanner(seasonKey);
+  renderPastChampions();
+}
+
+// Every season with a champion, newest first. The same list whichever season
+// is selected; the section stays hidden until some season has a champion.
+function renderPastChampions() {
+  const section = document.getElementById("past-champions");
+  const listEl = document.getElementById("past-champions-list");
+  if (!section || !listEl) return;
+
+  const champions = [...config.seasons]
+    .sort((a, b) => b.localeCompare(a))
+    .filter(key => getSeasonData(key)?.champion && getTeam(getSeasonData(key).champion, key));
+
+  listEl.innerHTML = champions.map(key => `
+      <li><span class="past-champion-season">${key}</span> · ${teamLink(key, getSeasonData(key).champion)}</li>
+    `).join("");
+  section.style.display = champions.length ? "" : "none";
 }
 
 // ─── Page: Schedule ───────────────────────────────────────────────────────────
