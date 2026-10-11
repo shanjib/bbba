@@ -4,7 +4,11 @@ const config = {
     abbr: "BBBA",
     tagline: "Hoops, Heart & Heritage",
     about: "The Boston Bengali Basketball Association (BBBA) is a community basketball league founded by and for the Bengali community of Boston. We bring together players of all skill levels for a season of competitive but friendly basketball. Whether you're a seasoned baller or just getting back on the court, BBBA is about community, competition, and having a great time.",
-    social: []  // league-wide social accounts; used in a later update
+    // League-wide social accounts, shown in the footer and as "Follow BBBA" on Home
+    // (both hidden while the list is empty). handle is optional. Instagram, YouTube,
+    // TikTok, Facebook and X/Twitter get an icon; any other platform shows as text.
+    // Example: { platform: "Instagram", url: "https://instagram.com/bbba", handle: "@bbba" }
+    social: []
   },
   currentSeason: "2026",
   // Season files (js/data/season-YYYY.js) load automatically from this list via
