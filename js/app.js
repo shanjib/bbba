@@ -1,9 +1,15 @@
 // ─── Season Resolution ────────────────────────────────────────────────────────
 
 // Pages that support season switching via ?season= param
-const SEASON_AWARE_PAGES = ["standings.html", "stats.html", "teams.html"];
+const SEASON_AWARE_PAGES = ["index.html", "schedule.html", "standings.html", "stats.html", "teams.html"];
+
+function isSeasonAwarePage() {
+  return SEASON_AWARE_PAGES.includes(currentPage());
+}
 
 function getActiveSeason() {
+  // Other pages ignore ?season= and always show the current season
+  if (!isSeasonAwarePage()) return config.currentSeason;
   const params = new URLSearchParams(window.location.search);
   const requested = params.get("season");
   if (requested && seasons[requested]) return requested;
@@ -66,22 +72,19 @@ function currentPage() {
 
 // ─── Season Switcher ──────────────────────────────────────────────────────────
 
+// The switcher lives in the footer partial and only shows on season-aware pages
 function renderSeasonSwitcher(activeSeason) {
   const el = document.getElementById("season-switcher");
   if (!el) return;
 
-  // Hide switcher when viewing a specific box score
+  // Hide switcher on other pages and when viewing a specific box score
   const params = new URLSearchParams(window.location.search);
-  if (params.get("game")) {
+  if (!isSeasonAwarePage() || params.get("game") || config.seasons.length <= 1) {
     el.style.display = "none";
     return;
   }
 
-  if (config.seasons.length <= 1) {
-    el.style.display = "none";
-    return;
-  }
-
+  el.style.display = "";
   el.innerHTML = `
     <label class="switcher-label" for="season-select">Season</label>
     <select id="season-select" class="season-select">
@@ -92,9 +95,15 @@ function renderSeasonSwitcher(activeSeason) {
 
   document.getElementById("season-select").addEventListener("change", (e) => {
     setSeasonParam(e.target.value);
-    renderPage(e.target.value);
-    document.querySelectorAll(".current-season-label").forEach(el => el.textContent = e.target.value);
+    applySeason(e.target.value);
   });
+}
+
+// Update everything that follows the selected season: labels, switcher and page content
+function applySeason(seasonKey) {
+  document.querySelectorAll(".current-season-label").forEach(el => el.textContent = seasonKey);
+  renderSeasonSwitcher(seasonKey);
+  renderPage(seasonKey);
 }
 
 // ─── Standings Derivation ─────────────────────────────────────────────────────
@@ -223,25 +232,32 @@ async function loadPartials() {
   if (footerEl) footerEl.outerHTML = footerHTML;
 }
 
-function championshipBanner(currentData) {
+function championshipBanner(seasonKey) {
   const bannerEl = document.getElementById("champion-banner");
-  if (bannerEl && currentData?.champion) {
-    const champ = currentData.teams.find(t => t.id === currentData.champion);
+  if (!bannerEl) return;
+
+  // Clear first so switching to a season without a champion removes the banner
+  bannerEl.innerHTML = "";
+  bannerEl.style.display = "none";
+
+  const data = getSeasonData(seasonKey);
+  if (data?.champion) {
+    const champ = data.teams.find(t => t.id === data.champion);
     if (champ) {
-      const imgPath = `assets/champion-${config.currentSeason}.jpeg`;
+      const imgPath = `assets/champion-${seasonKey}.jpeg`;
       bannerEl.innerHTML = `
         <div class="champion-banner">
           <div class="champion-header">
             <span class="champion-trophy">🏆</span>
             <div class="champion-text">
-              <div class="champion-label">${config.currentSeason} BBBA Champions</div>
+              <div class="champion-label">${seasonKey} BBBA Champions</div>
               <div class="champion-name">${champ.name}</div>
             </div>
             <span class="champion-trophy">🏆</span>
           </div>
           <img
             src="${imgPath}"
-            alt="${champ.name} — ${config.currentSeason} BBBA Champions"
+            alt="${champ.name} — ${seasonKey} BBBA Champions"
             class="champion-photo"
             onerror="this.style.display='none'"
           />
@@ -253,9 +269,9 @@ function championshipBanner(currentData) {
 
 // ─── Page: About ──────────────────────────────────────────────────────────────
 
-function renderAbout() {
-  // Home is locked to the current season for now
-  const seasonKey = config.currentSeason;
+function renderAbout(seasonKey) {
+  const statsEl = document.getElementById("league-quick-stats");
+  if (!statsEl) return;
 
   const el = document.getElementById("about-text");
   if (el) el.textContent = getSeasonText(seasonKey, "about");
@@ -266,34 +282,34 @@ function renderAbout() {
   const currentData = getSeasonData(seasonKey);
   const played = currentData ? currentData.games.filter(isPlayed).length : 0;
   const total  = currentData ? currentData.games.length : 0;
+  // Players on this season's rosters, not the all-time list
+  const rostered = new Set((currentData?.teams ?? []).flatMap(t => t.playerIds)).size;
 
-  const statsEl = document.getElementById("league-quick-stats");
-  if (statsEl) {
-    statsEl.innerHTML = `
+  statsEl.innerHTML = `
       <div class="quick-stat"><span class="qs-num">${currentData ? currentData.teams.length : 0}</span><span class="qs-label">Teams</span></div>
-      <div class="quick-stat"><span class="qs-num">${players.length}</span><span class="qs-label">Players</span></div>
+      <div class="quick-stat"><span class="qs-num">${rostered}</span><span class="qs-label">Players</span></div>
       <div class="quick-stat"><span class="qs-num">${played}</span><span class="qs-label">Games Played</span></div>
       ${getSeasonStatus(seasonKey) !== "complete"
         ? `<div class="quick-stat"><span class="qs-num">${total - played}</span><span class="qs-label">Games Remaining</span></div>`
         : ""}
     `;
-  }
 
-  championshipBanner(currentData);
+  championshipBanner(seasonKey);
 }
 
 // ─── Page: Schedule ───────────────────────────────────────────────────────────
 
-function renderSchedule() {
+function renderSchedule(seasonKey) {
   const container = document.getElementById("schedule-container");
   if (!container) return;
 
-  // Schedule is locked to the current season for now
-  const seasonKey = config.currentSeason;
+  championshipBanner(seasonKey);
+
   const data = getSeasonData(seasonKey);
   if (!data) { container.innerHTML = `<p class="empty-state">No schedule data found.</p>`; return; }
 
-  championshipBanner(data)
+  const countEl = document.getElementById("schedule-game-count");
+  if (countEl) countEl.textContent = data.games.length ? ` — ${data.games.length} games total` : "";
 
   const status = getSeasonStatus(seasonKey);
   if (status === "upcoming" && !data.games.length && !(data.playoffs ?? []).length) {
@@ -413,7 +429,7 @@ function renderStandings(seasonKey) {
   if (!tbody) return;
 
   const data = getSeasonData(seasonKey);
-  championshipBanner(data);
+  championshipBanner(seasonKey);
   const standings = deriveStandings(data);
   if (!standings.length) {
     const msg = getSeasonStatus(seasonKey) === "upcoming"
@@ -448,7 +464,7 @@ function renderTeams(seasonKey) {
   if (!container) return;
 
   const data = getSeasonData(seasonKey);
-  championshipBanner(data);
+  championshipBanner(seasonKey);
   if (!data) { container.innerHTML = `<p class="empty-state">No data for this season.</p>`; return; }
 
   if (getSeasonStatus(seasonKey) === "upcoming" && !data.teams.length) {
@@ -726,8 +742,8 @@ function renderStatsLeaders(seasonKey, container) {
 // ─── Page Dispatcher ──────────────────────────────────────────────────────────
 
 function renderPage(seasonKey) {
-  renderAbout();
-  renderSchedule();
+  renderAbout(seasonKey);
+  renderSchedule(seasonKey);
   renderStandings(seasonKey);
   renderTeams(seasonKey);
   renderStats(seasonKey);
@@ -757,8 +773,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Dynamically load all season scripts from config.seasons, then partials
   await loadSeasonScripts();
   await loadPartials();
-
-  const activeSeason = getActiveSeason();
 
   // Highlight active nav link
   const page = currentPage();
@@ -796,12 +810,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Populate season labels
-  document.querySelectorAll(".current-season-label").forEach(el => el.textContent = activeSeason);
+  // Season labels, footer switcher and page content
+  applySeason(getActiveSeason());
 
-  // Render season switcher on aware pages
-  renderSeasonSwitcher(activeSeason);
-
-  // Render the page
-  renderPage(activeSeason);
+  // Browser back/forward changes ?season= (and ?game=) without a reload
+  window.addEventListener("popstate", () => applySeason(getActiveSeason()));
 });
