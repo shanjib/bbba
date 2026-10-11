@@ -86,6 +86,13 @@ function getTeam(id, seasonKey) {
   return data.teams.find(t => t.id === id) || null;
 }
 
+// The team a stat line counts for: its teamId when a sub played for another
+// team that game, otherwise the team whose roster has the player
+function statTeamId(ps, seasonKey) {
+  if (ps.teamId) return ps.teamId;
+  return getSeasonData(seasonKey)?.teams.find(t => t.playerIds.includes(ps.playerId))?.id ?? null;
+}
+
 // Find a game in any season, checking both the games and playoffs arrays
 function findGame(gameId) {
   for (const sk of config.seasons) {
@@ -651,8 +658,8 @@ function renderBoxScore(gameId, container) {
   const away    = getTeam(game.away, seasonKey);
   const homeWin = game.homeScore > game.awayScore;
 
-  const homeStats = game.playerStats.filter(ps => home?.playerIds.includes(ps.playerId));
-  const awayStats = game.playerStats.filter(ps => away?.playerIds.includes(ps.playerId));
+  const homeStats = game.playerStats.filter(ps => statTeamId(ps, seasonKey) === game.home);
+  const awayStats = game.playerStats.filter(ps => statTeamId(ps, seasonKey) === game.away);
 
   function buildTable(statsArr) {
     if (!statsArr.length) return `<p class="empty-state">No stats recorded.</p>`;
@@ -837,7 +844,7 @@ function teamPlayoffResult(data, teamId) {
 }
 
 // Regular-season totals for the team and its opponents, attributing playerStats
-// to a side by that season's rosters
+// to a side with statTeamId()
 function deriveTeamStats(seasonKey, team) {
   const data = getSeasonData(seasonKey);
   const keys = ["points", "rebounds", "assists", "blocks", "steals"];
@@ -845,11 +852,12 @@ function deriveTeamStats(seasonKey, team) {
   const result = { gamesPlayed: 0, team: zero(), opp: zero() };
 
   data.games.filter(g => isPlayed(g) && (g.home === team.id || g.away === team.id)).forEach(g => {
-    const opponent = getTeam(g.home === team.id ? g.away : g.home, seasonKey);
+    const opponentId = g.home === team.id ? g.away : g.home;
     result.gamesPlayed++;
     g.playerStats.forEach(ps => {
-      const side = team.playerIds.includes(ps.playerId) ? result.team
-        : opponent?.playerIds.includes(ps.playerId) ? result.opp
+      const statTeam = statTeamId(ps, seasonKey);
+      const side = statTeam === team.id ? result.team
+        : statTeam === opponentId ? result.opp
         : null;
       if (side) keys.forEach(k => side[k] += ps[k] ?? 0);
     });
@@ -864,16 +872,16 @@ function teamStatsTable(stats) {
     `<td class="${n > 0 ? "pos-diff" : n < 0 ? "neg-diff" : ""}">${formatDiff(n, decimals)}</td>`;
   return `
     <table class="roster-table team-stats-table">
-      <thead><tr><th>Stat</th><th>Team</th><th>Opp</th><th>Diff</th><th>Team/G</th><th>Opp/G</th><th>Diff/G</th></tr></thead>
+      <thead><tr><th>Stat</th><th>Per Game</th><th>Allowed Per Game</th><th>Diff Per Game</th><th>Total</th><th>Total Allowed</th><th>Diff</th></tr></thead>
       <tbody>
         ${Object.entries(labels).map(([k, label]) => `<tr>
           <td class="player-name">${label}</td>
-          <td>${stats.team[k]}</td>
-          <td>${stats.opp[k]}</td>
-          ${diffCell(stats.team[k] - stats.opp[k], 0)}
           <td>${avg(stats.team[k], gp)}</td>
           <td>${avg(stats.opp[k], gp)}</td>
           ${diffCell(gp ? (stats.team[k] - stats.opp[k]) / gp : 0, 1)}
+          <td>${stats.team[k]}</td>
+          <td>${stats.opp[k]}</td>
+          ${diffCell(stats.team[k] - stats.opp[k], 0)}
         </tr>`).join("")}
       </tbody>
     </table>`;
