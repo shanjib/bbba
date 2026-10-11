@@ -74,6 +74,18 @@ function teamLink(seasonKey, teamId, name) {
   return `<a href="${teamHref(seasonKey, teamId)}" class="team-link">${name ?? getTeam(teamId, seasonKey).name}</a>`;
 }
 
+// A player is the same person in every season, so a player link carries no season
+function playerHref(playerId) {
+  return `player.html?player=${encodeURIComponent(playerId)}`;
+}
+
+// A player's name linked to their player page, or plain text for an unknown id
+function playerLink(playerId, name) {
+  const p = getPlayer(playerId);
+  if (!p) return name ?? playerId ?? "";
+  return `<a href="${playerHref(playerId)}" class="player-link">${name ?? p.name}</a>`;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getPlayer(id) {
@@ -294,14 +306,15 @@ function deriveSeasonStats(seasonKey) {
 
   return Object.values(map);
 }
-// One row per player: GP, per-game averages, then totals. Used by Stats, Teams and the team page.
-function playerStatsTable(rows) {
+// One row per player: GP, per-game averages, then totals. Used by Stats, Teams, the team page
+// and the player page. lead is the columns before GP, the linked player name by default.
+function playerStatsTable(rows, lead = [{ label: "Player", cell: s => playerLink(s.playerId, s.name) }]) {
   return `
         <table class="roster-table">
-          <thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
+          <thead><tr>${lead.map(c => `<th>${c.label}</th>`).join("")}<th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>BPG</th><th>SPG</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th></tr></thead>
           <tbody>
             ${rows.map(s => `<tr>
-              <td class="player-name">${s.name}</td>
+              ${lead.map((c, i) => `<td${i === 0 ? ` class="player-name"` : ""}>${c.cell(s)}</td>`).join("")}
               <td>${s.gamesPlayed}</td>
               <td>${avg(s.totalPoints,   s.gamesPlayed)}</td>
               <td>${avg(s.totalRebounds, s.gamesPlayed)}</td>
@@ -623,7 +636,7 @@ function renderTeams(seasonKey) {
         </h2>
         <table class="roster-table">
           <thead><tr><th>Player</th></tr></thead>
-          <tbody>${unassigned.map(p => `<tr><td class="player-name">${p.name}</td></tr>`).join("")}</tbody>
+          <tbody>${unassigned.map(p => `<tr><td class="player-name">${playerLink(p.id)}</td></tr>`).join("")}</tbody>
         </table>
       </div>`;
   }
@@ -680,7 +693,7 @@ function renderBoxScore(gameId, container) {
           ${statsArr.map(ps => {
       const p = getPlayer(ps.playerId);
       return `<tr>
-              <td class="player-name">${p ? p.name : ps.playerId}</td>
+              <td class="player-name">${p ? playerLink(p.id) : ps.playerId}</td>
               <td>${ps.points   ?? 0}</td>
               <td>${ps.rebounds ?? 0}</td>
               <td>${ps.assists  ?? 0}</td>
@@ -748,7 +761,7 @@ function renderStatsLeaders(seasonKey, container) {
             <tbody>
               ${sorted.slice(0, 5).map((s, i) => `
                 <tr class="${i === 0 ? "leader-row" : ""}">
-                  <td class="player-name">${s.name}</td>
+                  <td class="player-name">${playerLink(s.playerId, s.name)}</td>
                   <td>${s.gamesPlayed}</td>
                   <td>${avg(s[totalKey], s.gamesPlayed)}</td>
                   <td>${s[totalKey]}</td>
@@ -1013,6 +1026,140 @@ function renderTeamPage(seasonKey) {
   container.innerHTML = html;
 }
 
+// ─── Page: Player ─────────────────────────────────────────────────────────────
+
+// Seasons the player was rostered in or has a stat line in (a sub), newest first
+function playerSeasonKeys(playerId) {
+  return config.seasons.slice().reverse().filter(sk => {
+    const data = getSeasonData(sk);
+    if (!data) return false;
+    return data.teams.some(t => t.playerIds.includes(playerId))
+      || [...data.games, ...(data.playoffs ?? [])].some(g => g.playerStats?.some(ps => ps.playerId === playerId));
+  });
+}
+
+// The player's own line in each game, newest first: date, opponent and result
+// from the side they played for, their five stats, then box score and video links
+function playerGameLogTable(seasonKey, playerId, games, showRound) {
+  const rosterTeamId = getSeasonData(seasonKey).teams.find(t => t.playerIds.includes(playerId))?.id;
+  const byDate = [...games].sort((a, b) => new Date(b.date) - new Date(a.date));
+  return `
+    <table class="roster-table player-log-table">
+      <thead><tr>${showRound ? "<th>Round</th>" : ""}<th>Date</th><th>Opponent</th><th>Result</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th><th></th></tr></thead>
+      <tbody>
+        ${byDate.map(g => {
+          const ps      = g.playerStats.find(x => x.playerId === playerId);
+          const teamId  = statTeamId(ps, seasonKey);
+          const isHome  = g.home === teamId;
+          const oppId   = isHome ? g.away : g.home;
+          const teamPts = isHome ? g.homeScore : g.awayScore;
+          const oppPts  = isHome ? g.awayScore : g.homeScore;
+          const won     = teamPts > oppPts;
+          // A sub played for someone else's team that game
+          const subNote = teamId && teamId !== rosterTeamId
+            ? `<div class="sub-note">Sub for ${teamLink(seasonKey, teamId)}</div>`
+            : "";
+          return `<tr>
+            ${showRound ? `<td class="player-name">${g.round ?? ""}</td>` : ""}
+            <td${showRound ? "" : ` class="player-name"`}>${formatDate(g.date)}</td>
+            <td>${isHome ? "vs" : "@"} ${teamLink(seasonKey, oppId)}${subNote}</td>
+            <td><span class="${won ? "result-win" : "result-loss"}">${won ? "W" : "L"}</span> ${teamPts}–${oppPts}</td>
+            <td>${ps.points   ?? 0}</td>
+            <td>${ps.rebounds ?? 0}</td>
+            <td>${ps.assists  ?? 0}</td>
+            <td>${ps.blocks   ?? 0}</td>
+            <td>${ps.steals   ?? 0}</td>
+            <td><div class="team-game-links">
+              <a class="box-score-link" href="${seasonHref(`stats.html?game=${g.id}`, seasonKey)}">Box Score</a>
+              ${g.youtubeUrl ? `<a class="yt-link-inline" href="${g.youtubeUrl}" target="_blank" rel="noopener noreferrer">▶ Watch</a>` : ""}
+            </div></td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>`;
+}
+
+// One person across every season, so no season switcher, bar or banner
+function renderPlayerPage() {
+  const container = document.getElementById("player-container");
+  if (!container) return;
+
+  const player = getPlayer(new URLSearchParams(window.location.search).get("player"));
+
+  if (!player) {
+    document.title = "Player not found — BBBA";
+    container.innerHTML = `
+      <div class="page-hero">
+        <h1 class="page-title">Player <span>Not Found</span></h1>
+        <p class="page-subtitle">We couldn't find that player.</p>
+      </div>
+      <a href="stats.html" class="back-link">← All Stats</a>`;
+    return;
+  }
+
+  document.title = `${player.name} — BBBA`;
+
+  const seasonKeys = playerSeasonKeys(player.id);
+  const rosterTeam = sk => getSeasonData(sk).teams.find(t => t.playerIds.includes(player.id)) ?? null;
+
+  let html = `
+    <a href="stats.html" class="back-link">← All Stats</a>
+    <div class="page-hero team-hero">
+      <h1 class="page-title">${player.name}</h1>
+      ${seasonKeys.length
+        ? `<p class="page-subtitle">${seasonKeys.map(sk => `${sk} · ${rosterTeam(sk)?.name ?? "Sub"}`).join(" &nbsp;|&nbsp; ")}</p>`
+        : ""}
+    </div>`;
+
+  if (!seasonKeys.length) {
+    html += `<p class="empty-state">${player.name} hasn't played in a BBBA season yet.</p>`;
+    container.innerHTML = html;
+    return;
+  }
+
+  // Regular season only: deriveSeasonStats never counts playoffs
+  const summaryRows = seasonKeys.map(sk => ({
+    ...deriveSeasonStats(sk).find(s => s.playerId === player.id),
+    seasonKey: sk,
+    teamId: rosterTeam(sk)?.id
+  }));
+
+  html += `
+    <div class="leaders-block team-section">
+      <h3 class="leaders-title">Season Stats — Regular Season</h3>
+      <div class="table-scroll">${playerStatsTable(summaryRows, [
+        { label: "Season", cell: s => s.seasonKey },
+        { label: "Team",   cell: s => s.teamId ? teamLink(s.seasonKey, s.teamId) : "Sub" }
+      ])}</div>
+    </div>`;
+
+  const playedIn = g => isPlayed(g) && g.playerStats?.some(ps => ps.playerId === player.id);
+  seasonKeys.forEach(sk => {
+    const data     = getSeasonData(sk);
+    const games    = data.games.filter(playedIn);
+    const playoffs = (data.playoffs ?? []).filter(playedIn);
+    if (!games.length && !playoffs.length) return;
+
+    html += `<div class="stats-section-heading player-season-heading">${sk} Game Log</div>`;
+    if (games.length) {
+      html += `
+        <div class="leaders-block team-section">
+          <h3 class="leaders-title">Regular Season</h3>
+          <div class="table-scroll">${playerGameLogTable(sk, player.id, games, false)}</div>
+        </div>`;
+    }
+    if (playoffs.length) {
+      html += `
+        <div class="leaders-block team-section">
+          <h3 class="leaders-title playoff-title">🏆 Playoffs</h3>
+          <div class="table-scroll">${playerGameLogTable(sk, player.id, playoffs, true)}</div>
+        </div>`;
+    }
+  });
+
+  container.innerHTML = html;
+}
+
 // ─── Page: Rules ──────────────────────────────────────────────────────────────
 
 // Each season's rules live in js/data/rules-<season>.html; a season without
@@ -1045,6 +1192,7 @@ function renderPage(seasonKey) {
   renderTeams(seasonKey);
   renderStats(seasonKey);
   renderTeamPage(seasonKey);
+  renderPlayerPage();
   renderRules(seasonKey);
 }
 
@@ -1073,8 +1221,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSeasonScripts();
   await loadPartials();
 
-  // Highlight active nav link; a team page sits under Teams
-  const page = currentPage() === "team.html" ? "teams.html" : currentPage();
+  // Highlight active nav link; a team page sits under Teams and a player page under Stats
+  const page = { "team.html": "teams.html", "player.html": "stats.html" }[currentPage()] ?? currentPage();
   document.querySelectorAll(".nav-link").forEach(link => {
     const linkPage = link.getAttribute("href").split("?")[0].split("/").pop();
     if (linkPage === page) link.classList.add("active");
