@@ -914,6 +914,20 @@ img { display: block; max-width: 100%; }
 
 .player-season-heading { margin-top: 40px; }
 
+/* ─── Past Champions (Home) ─────────────────────────────────────────────────── */
+.past-champions-list { list-style: none; }
+
+.past-champions-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.past-champions-list li:last-child { border-bottom: none; }
+
+.past-champion-season { color: var(--muted); }
+
 /* ─── Players Page ───────────────────────────────────────────────────────────── */
 .players-list {
     list-style: none;
