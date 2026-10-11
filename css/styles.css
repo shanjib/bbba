@@ -914,6 +914,24 @@ img { display: block; max-width: 100%; }
 
 .player-season-heading { margin-top: 40px; }
 
+/* ─── Players Page ───────────────────────────────────────────────────────────── */
+.players-list {
+    list-style: none;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 28px;
+    columns: 3;
+    column-gap: 32px;
+}
+
+.players-list li {
+    break-inside: avoid;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+}
+
 .sub-note { font-size: 12px; color: var(--muted); font-weight: 600; }
 
 /* ─── Hamburger Button ───────────────────────────────────────────────────────── */
@@ -945,10 +963,16 @@ img { display: block; max-width: 100%; }
 .hamburger.is-active .ham-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ─── Responsive ──────────────────────────────────────────────────────────────── */
+/* Seven menu items: tighten them so the desktop nav still fits just above the hamburger breakpoint */
+@media (max-width: 960px) {
+    .nav-link { padding: 6px 8px; }
+}
+
 @media (max-width: 768px) {
     .quick-stats  { grid-template-columns: repeat(2, 1fr); }
     .teams-grid   { grid-template-columns: 1fr; }
     .leaders-grid { grid-template-columns: 1fr; }
+    .players-list { columns: 2; padding: 16px 20px; }
     .about-hero   { padding: 32px 24px; }
     .about-hero::before { display: none; }
     .about-hero-title { font-size: 36px; }
@@ -1000,4 +1024,8 @@ img { display: block; max-width: 100%; }
     .header-inner {
         position: relative;
     }
+}
+
+@media (max-width: 480px) {
+    .players-list { columns: 1; }
 }
