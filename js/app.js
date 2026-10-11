@@ -14,6 +14,16 @@ function getSeasonData(seasonKey) {
   return seasons[seasonKey] || null;
 }
 
+// "upcoming", "in-progress" or "complete". Seasons without a status are treated as in progress.
+function getSeasonStatus(seasonKey) {
+  return getSeasonData(seasonKey)?.status || "in-progress";
+}
+
+// Per-season text (tagline, about, ...) with the league-wide value as the fallback
+function getSeasonText(seasonKey, key) {
+  return getSeasonData(seasonKey)?.[key] ?? config.league[key];
+}
+
 function setSeasonParam(seasonKey) {
   const url = new URL(window.location.href);
   url.searchParams.set("season", seasonKey);
@@ -244,13 +254,16 @@ function championshipBanner(currentData) {
 // ─── Page: About ──────────────────────────────────────────────────────────────
 
 function renderAbout() {
+  // Home is locked to the current season for now
+  const seasonKey = config.currentSeason;
+
   const el = document.getElementById("about-text");
-  if (el) el.textContent = config.league.about;
+  if (el) el.textContent = getSeasonText(seasonKey, "about");
 
   const taglineEl = document.querySelector(".league-tagline");
-  if (taglineEl) taglineEl.textContent = config.league.tagline;
+  if (taglineEl) taglineEl.textContent = getSeasonText(seasonKey, "tagline");
 
-  const currentData = getSeasonData(config.currentSeason);
+  const currentData = getSeasonData(seasonKey);
   const played = currentData ? currentData.games.filter(isPlayed).length : 0;
   const total  = currentData ? currentData.games.length : 0;
 
@@ -260,7 +273,9 @@ function renderAbout() {
       <div class="quick-stat"><span class="qs-num">${currentData ? currentData.teams.length : 0}</span><span class="qs-label">Teams</span></div>
       <div class="quick-stat"><span class="qs-num">${players.length}</span><span class="qs-label">Players</span></div>
       <div class="quick-stat"><span class="qs-num">${played}</span><span class="qs-label">Games Played</span></div>
-      <div class="quick-stat"><span class="qs-num">${total - played}</span><span class="qs-label">Games Remaining</span></div>
+      ${getSeasonStatus(seasonKey) !== "complete"
+        ? `<div class="quick-stat"><span class="qs-num">${total - played}</span><span class="qs-label">Games Remaining</span></div>`
+        : ""}
     `;
   }
 
@@ -273,13 +288,22 @@ function renderSchedule() {
   const container = document.getElementById("schedule-container");
   if (!container) return;
 
-  const data = getSeasonData(config.currentSeason);
+  // Schedule is locked to the current season for now
+  const seasonKey = config.currentSeason;
+  const data = getSeasonData(seasonKey);
   if (!data) { container.innerHTML = `<p class="empty-state">No schedule data found.</p>`; return; }
 
   championshipBanner(data)
 
+  const status = getSeasonStatus(seasonKey);
+  if (status === "upcoming" && !data.games.length && !(data.playoffs ?? []).length) {
+    container.innerHTML = `<p class="empty-state">The ${seasonKey} schedule is coming soon.</p>`;
+    return;
+  }
+
   const played   = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
-  const upcoming = data.games.filter(g => !isPlayed(g));
+  // A complete season has no games to come
+  const upcoming = status === "complete" ? [] : data.games.filter(g => !isPlayed(g));
   const playoffs = data.playoffs ?? [];
 
   let html = "";
@@ -288,8 +312,8 @@ function renderSchedule() {
   if (playoffs.length) {
     html += `<h2 class="section-subheading playoff-heading">🏆 Playoffs</h2>`;
     playoffs.forEach(g => {
-      const home    = g.home ? getTeam(g.home, config.currentSeason) : null;
-      const away    = g.away ? getTeam(g.away, config.currentSeason) : null;
+      const home    = g.home ? getTeam(g.home, seasonKey) : null;
+      const away    = g.away ? getTeam(g.away, seasonKey) : null;
       const played  = isPlayed(g);
       const homeWin = played && g.homeScore > g.awayScore;
 
@@ -337,8 +361,8 @@ function renderSchedule() {
   if (played.length) {
     html += `<h2 class="section-subheading">Completed Games</h2>`;
     played.forEach(g => {
-      const home    = getTeam(g.home, config.currentSeason);
-      const away    = getTeam(g.away, config.currentSeason);
+      const home    = getTeam(g.home, seasonKey);
+      const away    = getTeam(g.away, seasonKey);
       const homeWin = g.homeScore > g.awayScore;
       html += `
         <div class="game-card completed">
@@ -364,8 +388,8 @@ function renderSchedule() {
   if (upcoming.length) {
     html += `<h2 class="section-subheading">Upcoming Games</h2>`;
     upcoming.forEach(g => {
-      const home = getTeam(g.home, config.currentSeason);
-      const away = getTeam(g.away, config.currentSeason);
+      const home = getTeam(g.home, seasonKey);
+      const away = getTeam(g.away, seasonKey);
       html += `
         <div class="game-card upcoming">
           <div class="game-date">${formatDate(g.date)}</div>
@@ -392,7 +416,10 @@ function renderStandings(seasonKey) {
   championshipBanner(data);
   const standings = deriveStandings(data);
   if (!standings.length) {
-    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">No data yet.</td></tr>`;
+    const msg = getSeasonStatus(seasonKey) === "upcoming"
+      ? `No games played yet. The ${seasonKey} season hasn't started.`
+      : "No data yet.";
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">${msg}</td></tr>`;
     return;
   }
 
@@ -423,6 +450,11 @@ function renderTeams(seasonKey) {
   const data = getSeasonData(seasonKey);
   championshipBanner(data);
   if (!data) { container.innerHTML = `<p class="empty-state">No data for this season.</p>`; return; }
+
+  if (getSeasonStatus(seasonKey) === "upcoming" && !data.teams.length) {
+    container.innerHTML = `<p class="empty-state">Rosters coming soon.</p>`;
+    return;
+  }
 
   const allStats = deriveSeasonStats(seasonKey);
 
@@ -683,7 +715,9 @@ function renderStatsLeaders(seasonKey, container) {
     </div>`;
 
   } else {
-    html += `<p class="empty-state">No stats yet — check back after the first game!</p>`;
+    html += getSeasonStatus(seasonKey) === "upcoming"
+      ? `<p class="empty-state">No games played yet. The ${seasonKey} season hasn't started, so stats will appear after the first game.</p>`
+      : `<p class="empty-state">No stats yet — check back after the first game!</p>`;
   }
 
   container.innerHTML = html;
