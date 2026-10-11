@@ -1,7 +1,7 @@
 // ─── Season Resolution ────────────────────────────────────────────────────────
 
 // Pages that support season switching via ?season= param
-const SEASON_AWARE_PAGES = ["index.html", "schedule.html", "standings.html", "stats.html", "teams.html", "rules.html"];
+const SEASON_AWARE_PAGES = ["index.html", "schedule.html", "standings.html", "stats.html", "teams.html", "players.html", "rules.html"];
 
 function isSeasonAwarePage() {
   return SEASON_AWARE_PAGES.includes(currentPage());
@@ -642,6 +642,32 @@ function renderTeams(seasonKey) {
   }
 }
 
+// ─── Page: Players ────────────────────────────────────────────────────────────
+
+// Everyone on a roster in the season, alphabetical by display name, each linked to their player page
+function renderPlayers(seasonKey) {
+  const container = document.getElementById("players-container");
+  if (!container) return;
+
+  const data = getSeasonData(seasonKey);
+  if (!data) { container.innerHTML = `<p class="empty-state">No data for this season.</p>`; return; }
+
+  const rostered = [...new Set(data.teams.flatMap(t => t.playerIds))]
+    .map(id => getPlayer(id))
+    .filter(Boolean)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (!rostered.length) {
+    container.innerHTML = `<p class="empty-state">Rosters coming soon.</p>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <ul class="players-list">
+      ${rostered.map(p => `<li>${playerLink(p.id)}</li>`).join("")}
+    </ul>`;
+}
+
 // ─── Page: Stats ──────────────────────────────────────────────────────────────
 
 function renderStats(seasonKey) {
@@ -1093,7 +1119,7 @@ function renderPlayerPage() {
         <h1 class="page-title">Player <span>Not Found</span></h1>
         <p class="page-subtitle">We couldn't find that player.</p>
       </div>
-      <a href="stats.html" class="back-link">← All Stats</a>`;
+      <a href="players.html" class="back-link">← All Players</a>`;
     return;
   }
 
@@ -1190,6 +1216,7 @@ function renderPage(seasonKey) {
   renderSchedule(seasonKey);
   renderStandings(seasonKey);
   renderTeams(seasonKey);
+  renderPlayers(seasonKey);
   renderStats(seasonKey);
   renderTeamPage(seasonKey);
   renderPlayerPage();
@@ -1221,8 +1248,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSeasonScripts();
   await loadPartials();
 
-  // Highlight active nav link; a team page sits under Teams and a player page under Stats
-  const page = { "team.html": "teams.html", "player.html": "stats.html" }[currentPage()] ?? currentPage();
+  // Highlight active nav link; a team page sits under Teams and a player page under Players
+  const page = { "team.html": "teams.html", "player.html": "players.html" }[currentPage()] ?? currentPage();
   document.querySelectorAll(".nav-link").forEach(link => {
     const linkPage = link.getAttribute("href").split("?")[0].split("/").pop();
     if (linkPage === page) link.classList.add("active");
