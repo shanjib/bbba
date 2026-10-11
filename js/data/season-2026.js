@@ -14,6 +14,8 @@
 var seasons = {
   ...(typeof seasons !== "undefined" ? seasons : {}),
   "2026": {
+    status: "complete",
+    about: "The Boston Bengali Basketball Association (BBBA) is a community basketball league founded by and for the Bengali community of Boston. We bring together players of all skill levels for a season of competitive but friendly basketball. Whether you're a seasoned baller or just getting back on the court, BBBA is about community, competition, and having a great time.",
     teams: [
       {id: "cuties", name: "The Cuties",   playerIds: ["shaw", "shak", "nafe", "zami", "salw", "shaf", "sami"]},
       {id: "iggy", name: "Team Igoudala",  playerIds: ["zahi", "shan", "owas", "saze", "farh", "aref", "agho", "raje", "pina"]},
