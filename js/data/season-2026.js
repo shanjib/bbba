@@ -6,6 +6,9 @@
 // playerStats example:
 //   { playerId: "shan", points: 14, rebounds: 5, assists: 3, blocks: 1, steals: 2 }
 //
+// A sub playing for a team they're not rostered on: add teamId for that game, e.g.
+//   { playerId: "sami", teamId: "iggy", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1 }
+//
 // Scoring is 1s and 2s:
 //   1 point = inside the arc, 2 points = beyond the arc
 
@@ -295,7 +298,7 @@ var seasons = {
           {playerId: "raje", points: 0, rebounds: 6, assists: 3, blocks: 0, steals: 2},
           {playerId: "saze", points: 0, rebounds: 5, assists: 1, blocks: 0, steals: 0},
           {playerId: "farh", points: 3, rebounds: 10, assists: 0, blocks: 0, steals: 3},
-          {playerId: "sami", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1},
+          {playerId: "sami", teamId: "iggy", points: 0, rebounds: 2, assists: 0, blocks: 0, steals: 1},
         ]
       },
     ],
