@@ -1,7 +1,7 @@
 // ─── Season Resolution ────────────────────────────────────────────────────────
 
 // Pages that support season switching via ?season= param
-const SEASON_AWARE_PAGES = ["index.html", "schedule.html", "standings.html", "stats.html", "teams.html"];
+const SEASON_AWARE_PAGES = ["index.html", "schedule.html", "standings.html", "stats.html", "teams.html", "rules.html"];
 
 function isSeasonAwarePage() {
   return SEASON_AWARE_PAGES.includes(currentPage());
@@ -803,6 +803,29 @@ function renderStatsLeaders(seasonKey, container) {
   container.innerHTML = html;
 }
 
+// ─── Page: Rules ──────────────────────────────────────────────────────────────
+
+// Each season's rules live in js/data/rules-<season>.html; a season without
+// a file shows a placeholder instead
+async function renderRules(seasonKey) {
+  const container = document.getElementById("rules-content");
+  if (!container) return;
+
+  // Ignore a slower fetch for a season the user has already switched away from
+  container.dataset.season = seasonKey;
+  let html = null;
+  try {
+    const res = await fetch(`${getBasePath()}data/rules-${seasonKey}.html`);
+    if (res.ok) html = await res.text();
+  } catch (e) {
+    // Fall through to the placeholder
+  }
+  if (container.dataset.season !== seasonKey) return;
+
+  container.innerHTML = html
+    ?? `<p class="empty-state">The ${seasonKey} rules are coming soon.</p>`;
+}
+
 // ─── Page Dispatcher ──────────────────────────────────────────────────────────
 
 function renderPage(seasonKey) {
@@ -811,6 +834,7 @@ function renderPage(seasonKey) {
   renderStandings(seasonKey);
   renderTeams(seasonKey);
   renderStats(seasonKey);
+  renderRules(seasonKey);
 }
 
 // ─── Season Script Loader ────────────────────────────────────────────────────
