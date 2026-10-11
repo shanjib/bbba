@@ -889,9 +889,10 @@ function teamStatsTable(stats) {
 
 // Date, opponent, result and score from the team's side, home/away, plus box score and video links
 function teamScheduleTable(seasonKey, team, games, showRound) {
+  // Newest first; games without a date yet go on top
   const byDate = [...games].sort((a, b) => {
-    if (!a.date || !b.date) return a.date ? -1 : b.date ? 1 : 0;
-    return new Date(a.date) - new Date(b.date);
+    if (!a.date || !b.date) return a.date ? 1 : b.date ? -1 : 0;
+    return new Date(b.date) - new Date(a.date);
   });
   return `
     <table class="roster-table team-schedule-table">
@@ -961,7 +962,7 @@ function renderTeamPage(seasonKey) {
   const roster   = team.playerIds
     .map(id => allStats.find(s => s.playerId === id))
     .filter(Boolean)
-    .sort((a, b) => ppg(b) - ppg(a));
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   let html = `
     <a href="${seasonHref("teams.html", seasonKey)}" class="back-link">← All Teams</a>
