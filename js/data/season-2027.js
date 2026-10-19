@@ -16,7 +16,6 @@ var seasons = {
   ...(typeof seasons !== "undefined" ? seasons : {}),
   "2027": {
     status: "upcoming",
-    about: "TODO: 2027 about blurb",
     teams: [],
     games: [],
     playoffs: [],

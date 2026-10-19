@@ -12,7 +12,7 @@ const config = {
       { platform: "YouTube", url: "https://www.youtube.com/@bbba-film", handle: "@bbba-film"}
     ]
   },
-  currentSeason: "2026",
+  currentSeason: "2027",
   // Season files (js/data/season-YYYY.js) load automatically from this list via
   // loadSeasonScripts() in app.js; no script tag is needed in the HTML files.
   seasons: ["2026", "2027"]
