@@ -137,7 +137,7 @@ The `var` plus spread lets every season file add to one global regardless of loa
 | Box score | `renderBoxScore()` | `stats.html?game=<id>`; searches every season's games and playoffs. Per-team table with totals and a Watch button when there's a video |
 | Rules | `renderRules()` | Fetches `data/rules-YYYY.html`, or "coming soon" if the season has none |
 
-**Standings tiebreakers** (`deriveStandings`): win % → head-to-head wins → head-to-head point differential → overall point differential.
+**Standings tiebreakers** (`deriveStandings`): win % → head-to-head wins → head-to-head point differential → overall point differential. Head-to-head only counts games among the teams tied on win %, so ties of three or more teams work too.
 
 **Player stats** (`deriveSeasonStats`): sums over played regular-season games only. Averages = total ÷ games with a `playerStats` entry. Missing fields count as 0.
 
@@ -145,7 +145,7 @@ The `var` plus spread lets every season file add to one global regardless of loa
 
 ## Common tasks
 
-- **Record a game:** fill `date`, `homeScore`, `awayScore`, `playerStats` (and optionally `youtubeUrl`) on the game in the season file.
+- **Record a game:** fill `date`, `homeScore`, `awayScore`, `playerStats` (and optionally `youtubeUrl`) on the game in the season file. A played game left without a date shows as "TBD" at the top of game lists.
 - **Rosters:** add new players to `players.js` first, then add their ids to the team's `playerIds`.
 - **Sub for another team:** add `teamId` to that player's stat line for that game.
 - **Playoff game:** same fields, in the `playoffs` array. It never touches standings or season stats.
@@ -155,13 +155,6 @@ The `var` plus spread lets every season file add to one global regardless of loa
 - **New season:** copy the spread pattern into `js/data/season-YYYY.js`, add the year to `config.seasons`, add `js/data/rules-YYYY.html`, and bump `config.currentSeason` when it should become the default. No HTML changes needed.
 - **Social accounts:** edit `config.league.social`.
 - **New nav page:** one line in `js/partials/header.html` (and add it to `SEASON_AWARE_PAGES` if it should follow `?season=`).
-
-## Known issues
-
-- **Played games need a `date`**: games sort by date, and `null` sorts to the bottom and shows "TBD".
-- **Ties among 3+ teams**: the tiebreaker is a pairwise comparator, fine for two-team ties but not guaranteed consistent for three or more.
-- **Nav highlight on extensionless URLs**: the active link is matched against `*.html` filenames, so `/stats` won't highlight. Cosmetic.
-- **Hardcoded text**: the `stats.html` subtitle still mentions career totals, which were removed; the `index.html` hero title and the footer league name are hardcoded too.
 
 ## Styling
 
