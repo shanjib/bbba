@@ -75,7 +75,7 @@ Think of `config.js` + `players.js` + `js/data/` as the database, `app.js` as th
 ```js
 const config = {
   league: { name, abbr, tagline, about, social: [{ platform, url, handle? }] },
-  currentSeason: "2026",
+  currentSeason: "2027",
   seasons: ["2026", "2027"]
 };
 ```
@@ -152,9 +152,22 @@ The `var` plus spread lets every season file add to one global regardless of loa
 - **Champion:** set `champion` to the team id and add `assets/champion-YYYY.jpeg`.
 - **Team photo:** add `assets/teams/YYYY-<teamId>.jpeg`.
 - **Season status:** set `status` to `"upcoming"`, `"in-progress"` or `"complete"`.
-- **New season:** copy the spread pattern into `js/data/season-YYYY.js`, add the year to `config.seasons`, add `js/data/rules-YYYY.html`, and bump `config.currentSeason` when it should become the default. No HTML changes needed.
 - **Social accounts:** edit `config.league.social`.
 - **New nav page:** one line in `js/partials/header.html` (and add it to `SEASON_AWARE_PAGES` if it should follow `?season=`).
+
+## Adding a new season
+
+No HTML changes are needed.
+
+1. Create `js/data/season-YYYY.js` by copying the spread pattern from an existing season file. Start with `status: "upcoming"` and empty `teams`, `games` and `playoffs`. Add `about` or `tagline` only if the season should override the league's text in `config.league`.
+2. Add the year to `config.seasons`.
+3. Set `config.currentSeason` to the year when it should become the default. Earlier seasons stay one pick away in the footer dropdown.
+
+Optional, any time:
+- Rules: `js/data/rules-YYYY.html` (the page shows "coming soon" until it exists).
+- Champion photo: `assets/champion-YYYY.jpeg`.
+- Team photos: `assets/teams/YYYY-<team id>.jpeg`.
+- Social accounts: `config.league.social`.
 
 ## Styling
 
