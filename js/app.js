@@ -131,8 +131,18 @@ function avg(total, gp) {
   return (total / gp).toFixed(1);
 }
 
+// Page filename; extensionless URLs (/stats, as GitHub Pages also serves) map to "stats.html"
 function currentPage() {
-  return window.location.pathname.split("/").pop() || "index.html";
+  const page = window.location.pathname.split("/").pop() || "index.html";
+  return page.includes(".") ? page : `${page}.html`;
+}
+
+// Newest first; games without a date yet go on top
+function byDateDesc(games) {
+  return [...games].sort((a, b) => {
+    if (!a.date || !b.date) return a.date ? 1 : b.date ? -1 : 0;
+    return new Date(b.date) - new Date(a.date);
+  });
 }
 
 // ─── Season Switcher ──────────────────────────────────────────────────────────
@@ -184,7 +194,7 @@ function renderPastSeasonBar(seasonKey) {
   url.searchParams.delete("game");
   // The team may not exist in the current season, so a team page goes back to Teams
   if (currentPage() === "team.html") {
-    url.pathname = url.pathname.replace(/team\.html$/, "teams.html");
+    url.pathname = url.pathname.replace(/team(\.html)?$/, "teams$1");
     url.search = "";
   }
 
@@ -260,16 +270,21 @@ function deriveStandings(data) {
     away.h2h[g.home].pointDiff -= diff;
   });
 
-  return Object.values(map).sort((a, b) => {
-    const aGP = a.wins + a.losses, bGP = b.wins + b.losses;
-    const aWP = aGP ? a.wins / aGP : 0, bWP = bGP ? b.wins / bGP : 0;
-    if (bWP !== aWP) return bWP - aWP;
-    const aH2H = a.h2h[b.teamId]?.wins ?? 0, bH2H = b.h2h[a.teamId]?.wins ?? 0;
-    if (bH2H !== aH2H) return bH2H - aH2H;
-    const aHD = a.h2h[b.teamId]?.pointDiff ?? 0, bHD = b.h2h[a.teamId]?.pointDiff ?? 0;
-    if (bHD !== aHD) return bHD - aHD;
-    return (b.pointsScored - b.pointsAllowed) - (a.pointsScored - a.pointsAllowed);
+  // Tiebreakers only count games against the teams tied on the same win %:
+  // head-to-head wins, then head-to-head point differential, then overall
+  // point differential. Each team gets one score, so 3+ way ties stay consistent.
+  const teams = Object.values(map);
+  const winPct = t => (t.wins + t.losses) ? t.wins / (t.wins + t.losses) : 0;
+  teams.forEach(t => {
+    const tied = teams.filter(o => o !== t && winPct(o) === winPct(t));
+    t.tiedWins = tied.reduce((n, o) => n + t.h2h[o.teamId].wins, 0);
+    t.tiedPointDiff = tied.reduce((n, o) => n + t.h2h[o.teamId].pointDiff, 0);
   });
+  return teams.sort((a, b) =>
+    winPct(b) - winPct(a) ||
+    b.tiedWins - a.tiedWins ||
+    b.tiedPointDiff - a.tiedPointDiff ||
+    (b.pointsScored - b.pointsAllowed) - (a.pointsScored - a.pointsAllowed));
 }
 
 // ─── Player Stats Derivation ──────────────────────────────────────────────────
@@ -530,7 +545,7 @@ function renderSchedule(seasonKey) {
     return;
   }
 
-  const played   = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
+  const played   = byDateDesc(data.games.filter(isPlayed));
   // A complete season has no games to come
   const upcoming = status === "complete" ? [] : data.games.filter(g => !isPlayed(g));
   const playoffs = data.playoffs ?? [];
@@ -884,7 +899,7 @@ function renderStatsLeaders(seasonKey, container) {
 
     // ── Box scores ──
     if (data) {
-      const playedGames = data.games.filter(isPlayed).sort((a, b) => new Date(b.date) - new Date(a.date));
+      const playedGames = byDateDesc(data.games.filter(isPlayed));
       if (playedGames.length) {
         html += `<div class="stats-section-heading" style="margin-top:48px;">Box Scores</div>`;
         html += `<div class="leaders-grid"><div class="leaders-block full-width">
@@ -947,9 +962,8 @@ function teamPlayoffResult(data, teamId) {
   if (data.champion === teamId) return "Champions";
   const losses = (data.playoffs ?? [])
     .filter(g => isPlayed(g) && (g.home === teamId || g.away === teamId))
-    .filter(g => (g.home === teamId) !== (g.homeScore > g.awayScore))
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-  const lastLoss = losses[losses.length - 1];
+    .filter(g => (g.home === teamId) !== (g.homeScore > g.awayScore));
+  const lastLoss = byDateDesc(losses)[0];
   if (!lastLoss) return null;
   // "Semifinal - Contested" → "semifinal"; the Championship is the final
   const round = (lastLoss.round ?? "").split(" - ")[0].trim();
@@ -1003,11 +1017,7 @@ function teamStatsTable(stats) {
 
 // Date, opponent, result and score from the team's side, home/away, plus box score and video links
 function teamScheduleTable(seasonKey, team, games, showRound) {
-  // Newest first; games without a date yet go on top
-  const byDate = [...games].sort((a, b) => {
-    if (!a.date || !b.date) return a.date ? 1 : b.date ? -1 : 0;
-    return new Date(b.date) - new Date(a.date);
-  });
+  const byDate = byDateDesc(games);
   return `
     <table class="roster-table team-schedule-table">
       <thead><tr>${showRound ? "<th>Round</th>" : ""}<th>Date</th><th>Opponent</th><th>Result</th><th>H/A</th><th></th></tr></thead>
@@ -1143,7 +1153,7 @@ function playerSeasonKeys(playerId) {
 // from the side they played for, their five stats, then box score and video links
 function playerGameLogTable(seasonKey, playerId, games, showRound) {
   const rosterTeamId = getSeasonData(seasonKey).teams.find(t => t.playerIds.includes(playerId))?.id;
-  const byDate = [...games].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const byDate = byDateDesc(games);
   return `
     <table class="roster-table player-log-table">
       <thead><tr>${showRound ? "<th>Round</th>" : ""}<th>Date</th><th>Opponent</th><th>Result</th><th>PTS</th><th>REB</th><th>AST</th><th>BLK</th><th>STL</th><th></th></tr></thead>
@@ -1322,6 +1332,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Dynamically load all season scripts from config.seasons, then partials
   await loadSeasonScripts();
   await loadPartials();
+  document.querySelectorAll(".league-name").forEach(el => el.textContent = config.league.name);
   renderSocialLinks();
 
   // Highlight active nav link; a team page sits under Teams and a player page under Players
