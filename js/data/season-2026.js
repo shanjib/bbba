@@ -31,7 +31,7 @@ var seasons = {
         id: "2026-g1",
         date: "2026-07-22",
         home: "cuties", away: "iggy",
-        youtubeUrl: "https://youtu.be/5NFWNMyrdN4",
+        youtubeUrl: "https://youtu.be/eVtye46-TxM",
         homeScore: 25, awayScore: 20,
         playerStats: [
           {playerId: "shan", points: 9, rebounds: 11, assists: 4, blocks: 1, steals: 0},
@@ -53,7 +53,7 @@ var seasons = {
         id: "2026-g2",
         date: "2026-07-22",
         home: "sunrun", away: "d",
-        youtubeUrl: "https://youtu.be/Ou9aBING-xg",
+        youtubeUrl: "https://youtu.be/XaZFajDOHGE",
         homeScore: 20, awayScore: 36,
         playerStats: [
           {playerId: "mehd", points: 7, rebounds: 6, assists: 1, blocks: 0, steals: 1},
@@ -78,7 +78,7 @@ var seasons = {
         date: "2026-06-13",
         home: "cuties", away: "sunrun",
         homeScore: 17, awayScore: 15,
-        youtubeUrl: "https://youtu.be/YMYgcMMAA_c",
+        youtubeUrl: "https://youtu.be/T_rqE4Qu0cQ",
         playerStats: [
           {playerId: "shaw", points: 13, rebounds: 10, assists: 0, blocks: 1, steals: 1},
           {playerId: "shak", points: 1, rebounds: 10, assists: 2, blocks: 0, steals: 1},
@@ -100,7 +100,7 @@ var seasons = {
         date: "2026-05-17",
         home: "iggy", away: "d",
         homeScore: 14, awayScore: 11,
-        youtubeUrl: "https://youtu.be/4Y6FkNyRh5I",
+        youtubeUrl: "https://youtu.be/JVrIh_o--i0",
         playerStats: [
           {playerId: "shan", points: 2, rebounds: 12, assists: 1, blocks: 0, steals: 0},
           {playerId: "zahi", points: 5, rebounds: 8, assists: 3, blocks: 0, steals: 4},
@@ -124,7 +124,7 @@ var seasons = {
         date: "2026-07-25",
         home: "cuties", away: "d",
         homeScore: 15, awayScore: 10,
-        youtubeUrl: "https://youtu.be/CgI7zz1_1pM",
+        youtubeUrl: "https://youtu.be/EBlQFkLqmOs",
         playerStats: [
           {playerId: "shaw", points: 8, rebounds: 16, assists: 2, blocks: 1, steals: 4},
           {playerId: "shak", points: 3, rebounds: 3, assists: 0, blocks: 0, steals: 0},
@@ -146,7 +146,7 @@ var seasons = {
         date: "2026-07-12",
         home: "iggy", away: "sunrun",
         homeScore: 22, awayScore: 35,
-        youtubeUrl: "https://youtu.be/eM0Sa4NaJ04",
+        youtubeUrl: "https://youtu.be/LSI259sYXsI",
         playerStats: [
           {playerId: "shan", points: 7, rebounds: 11, assists: 3, blocks: 0, steals: 1},
           {playerId: "zahi", points: 8, rebounds: 7, assists: 5, blocks: 0, steals: 2},
@@ -171,7 +171,7 @@ var seasons = {
         date: "2026-06-09",
         home: "iggy", away: "cuties",
         homeScore: 17, awayScore: 20,
-        youtubeUrl: "https://youtu.be/QoZQ9gTL_4Q",
+        youtubeUrl: "https://youtu.be/tNTB9Wo3y4Y",
         playerStats: [
           {playerId: "shan", points: 5, rebounds: 14, assists: 4, blocks: 0, steals: 3},
           {playerId: "zahi", points: 10, rebounds: 5, assists: 4, blocks: 0, steals: 3},
@@ -192,7 +192,7 @@ var seasons = {
         date: "2026-08-08",
         home: "d", away: "sunrun",
         homeScore: 21, awayScore: 18,
-        youtubeUrl: "https://youtu.be/gxBYzFsJ8a0",
+        youtubeUrl: "https://youtu.be/V8F71Mdmf7U",
         playerStats: [
           {playerId: "mehd", points: 8, rebounds: 8, assists: 2, blocks: 1, steals: 2},
           {playerId: "mash", points: 4, rebounds: 10, assists: 1, blocks: 0, steals: 0},
@@ -214,7 +214,7 @@ var seasons = {
         date: "2026-07-15",
         home: "sunrun", away: "cuties",
         homeScore: 21, awayScore: 18,
-        youtubeUrl: "https://youtu.be/E7BB5useJak",
+        youtubeUrl: "https://youtu.be/gxBYzFsJ8a0",
         playerStats: [
           {playerId: "shaw", points: 9, rebounds: 6, assists: 1, blocks: 5, steals: 1},
           {playerId: "shak", points: 3, rebounds: 4, assists: 5, blocks: 0, steals: 1},
@@ -237,7 +237,7 @@ var seasons = {
         date: "2026-08-11",
         home: "d", away: "iggy",
         homeScore: 20, awayScore: 15,
-        youtubeUrl: "https://youtu.be/NEvV-5yITck",
+        youtubeUrl: "https://youtu.be/v5Ebm5QsoY8",
         playerStats: [
           {playerId: "iram", points: 4, rebounds: 18, assists: 3, blocks: 2, steals: 3},
           {playerId: "shih", points: 2, rebounds: 2, assists: 0, blocks: 0, steals: 0},
@@ -261,7 +261,7 @@ var seasons = {
         date: "2026-08-15",
         home: "d", away: "cuties",
         homeScore: 14, awayScore: 16,
-        youtubeUrl: "https://youtu.be/XbiGDBr4JQU",
+        youtubeUrl: "https://youtu.be/smy-qW_YuZw",
         playerStats: [
           {playerId: "iram", points: 1, rebounds: 17, assists: 0, blocks: 2, steals: 1},
           {playerId: "shih", points: 1, rebounds: 3, assists: 0, blocks: 0, steals: 0},
@@ -284,7 +284,7 @@ var seasons = {
         date: "2026-08-15",
         home: "sunrun", away: "iggy",
         homeScore: 29, awayScore: 23,
-        youtubeUrl: "https://youtu.be/vBfwhxWczGA",
+        youtubeUrl: "https://youtu.be/AjTnk7euQTs",
         playerStats: [
           {playerId: "mash", points: 7, rebounds: 10, assists: 3, blocks: 0, steals: 0},
           {playerId: "mehd", points: 8, rebounds: 8, assists: 2, blocks: 0, steals: 2},
@@ -310,7 +310,7 @@ var seasons = {
         date: "2026-08-25",
         home: "d", away: "sunrun",
         homeScore: 24, awayScore: 25,
-        youtubeUrl: "https://youtu.be/nMjcp2RqV00",
+        youtubeUrl: "https://youtu.be/6_-_V-BC2Z8",
         playerStats: [
           {playerId: "mehd", points: 7, rebounds: 13, assists: 6, blocks: 0, steals: 0},
           {playerId: "mash", points: 2, rebounds: 4, assists: 0, blocks: 0, steals: 1},
@@ -335,7 +335,7 @@ var seasons = {
         date: "2026-09-03",
         home: "d", away: "sunrun",
         homeScore: 18, awayScore: 21,
-        youtubeUrl: "https://youtu.be/lHy0jlO2FYc",
+        youtubeUrl: "https://youtu.be/co-HSyV_-6k",
         playerStats: [
           {playerId: "mehd", points: 4, rebounds: 12, assists: 1, blocks: 0, steals: 1},
           {playerId: "mash", points: 2, rebounds: 8, assists: 1, blocks: 0, steals: 0},
@@ -360,7 +360,7 @@ var seasons = {
         date: "2026-09-20",
         home: "cuties", away: "sunrun",
         homeScore: 22, awayScore: 19,
-        youtubeUrl: "https://youtu.be/udkWIZcxEVg",
+        youtubeUrl: "https://youtu.be/5huudk9spY4",
         playerStats: [
           {playerId: "mash", points: 1, rebounds: 8, assists: 2, blocks: 0, steals: 3},
           {playerId: "mehd", points: 8, rebounds: 5, assists: 3, blocks: 0, steals: 0},

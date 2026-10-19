@@ -8,7 +8,9 @@ const config = {
     // (both hidden while the list is empty). handle is optional. Instagram, YouTube,
     // TikTok, Facebook and X/Twitter get an icon; any other platform shows as text.
     // Example: { platform: "Instagram", url: "https://instagram.com/bbba", handle: "@bbba" }
-    social: []
+    social: [
+      { platform: "YouTube", url: "https://www.youtube.com/@bbba-film", handle: "@bbba-film"}
+    ]
   },
   currentSeason: "2026",
   // Season files (js/data/season-YYYY.js) load automatically from this list via
